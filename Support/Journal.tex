@@ -1,0 +1,957 @@
+%\documentclass[twocolumn, 10pt, journal]{IEEEtran}
+%\documentclass[twocolumn,  journal]{IEEEtran}
+\documentclass[onecolumn, 12pt]{IEEEtran}
+%\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+%    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\bibliographystyle{ieeetr}
+%\linespread{1.75}
+
+\usepackage{cite}
+
+\usepackage[dvips]{graphicx}
+ \graphicspath{{/Figures/}}
+\usepackage{subfigure}
+
+\DeclareGraphicsExtensions{.eps,.pdf,.png,.jpg}
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{color}
+\usepackage{longtable,balance}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{dsfont}
+\usepackage{amssymb,url}
+
+\hyphenation{op-tical net-works semi-conduc-tor}
+\newcommand{\argmax}{\mathop{\rm arg~max}\limits}
+\newcommand{\argmin}{\mathop{\rm arg~min}\limits}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\bm}[1]{\mbox{\boldmath{$#1$}}}
+\makeatletter
+\newcommand{\rmnum}[1]{\romannumeral #1}
+\newcommand{\Rmnum}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\makeatother
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{definition}[1][Definition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Example]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Remark]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+\hoffset=0.in \textheight=8.8in \textwidth=6.57in \voffset=-0.0in
+
+%\linespread{1.6}
+\begin{document}
+
+\title{\huge{Simulator}}
+%\linespread{1.2}
+\author{\IEEEauthorblockN{Chengchao Liang  and F.~Richard~Yu}\\
+\IEEEauthorblockA{Depart. of Systems and Computer Eng., Carleton University, Ottawa, ON, Canada}\\
+\normalsize{Email: chengchaoliang@sce.carleton.ca; richard.yu@carleton.ca}
+}
+\maketitle
+\vspace{-0.6cm}
+%\linespread{1.45}
+\begin{abstract}
+In this document, detailed information of our simulator is presented. 
+
+\end{abstract}
+
+\begin{IEEEkeywords}
+Virtualization, caching, streaming video, SDN
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+
+%\linespread{1.6}
+\section{Network Structure}
+\label{sec:str}
+%
+Global Parameters structure. 
+\emph{NET}
+%To accommodate the significant growth in wireless traffic and services, it is beneficial to extend \emph{virtualization}, which has been successfully used in wired networks (e.g., virtual private networks (VPNs)), to wireless networks \cite{LY15}. With virtualization technology, wireless network infrastructure can be decoupled from the services that it provides, so that differentiated services can share the same infrastructure, \textcolor{red}{thereby} maximizing its utilization. Moreover, wireless network virtualization provides easier migration to newer  technologies while supporting legacy technologies by isolating part of the network\cite{LY15}.
+%
+%Several research projects have been started around the world in the area of wireless network virtualization, such as Environment for Network Innovations (GENI) \cite{peterson2006geni} and  Virtualized dIstributed plaTfoRms of smart Objects (VITRO) \cite{sarakis2012framework}. The authors of \cite{Xia2011Virtual} propose a wireless local area network (WLAN) virtualization approach to extend the virtual network embedding from wired networks to wireless networks. Virtualizing eNodeB in 3rd Generation Partnership Project (3GPP) Long term evolution (LTE) is investigated in  \cite{Pentikousis2013Mobileflow} from the views of node virtualization and software defined networks.
+%%Virtualization approaches for IEEE 802.16e\&m are studied in \cite{Kokku2012NVS}.  \par
+%%
+%
+%Another new technology, \emph{information-centric networking} (ICN), has attracted great interests from both academia and industry \cite{ADIKO01,CHCKC01,PPJ01}. The basic principle behind ICN is to promote content to a first-class citizen in the network. A significant advantage of ICN is to provide native support for scalable and highly efficient content retrieval, and meanwhile with enhanced capability for mobility and security. ICN can realize in-network \emph{caching} to reduce the duplicate content transmissions in networks.  A number of research efforts have been dedicated to ICN, including the EU funded projects Publish-Subscribe Internet Technology (PURSUIT) \cite{PURSUIT} and the US funded projects Named Data Networking (NDN) \cite{NDN02}.
+%
+%Although some excellent works have been done on wireless network virtualization and ICN, these two important areas have traditionally been addressed separately in the literature. However, as shown in the following, it is necessary to consider these two advanced technologies together to provide better services in next generation wireless networks\textcolor{red}{\cite{liang2015information}}. Therefore, we jointly study wireless network virtualization and ICN so as to improve the end-to-end network performance.
+%The motivations behind our work are based on the following observations.
+%
+%\begin{itemize}
+%
+%\item On one hand, wireless network virtualization enables the sharing of not only the infrastructure, but also the content, among users from different service providers. Consequently, the capital expenses (CapEx) and operation expenses (OpEx) of wireless access networks, as well as core networks, can be reduced significantly.
+%
+%\item On the other hand, as content retrieval (instead of other traditional parameters, such as spectrum efficiency) is put as a high priority in ICN, the processes in wireless network virtualization (e.g., virtual resource abstracting, slicing, sharing and control) will be significantly affected by ICN.
+%
+%\item Therefore, jointly considering wireless network virtualization and ICN could improve the end-to-end network performance.
+%
+%\end{itemize}
+%
+%The distinctive features of this paper are as follows.
+%
+%%The promotion of CCN is emerging, due to the fact that an important portion of mobile multimedia traffic is coming from duplicately downloading a few popular contents (e.g., popular music videos) with large sizes\cite{wang2014cache}. Currently, introducing CCN-based in-network caching to wireless areas is emerging. Caching in 3G mobile networks \cite{erman2011cache} and 4G LTE networks \cite{ramanan2013cacheability} have both been proven to be able to reduce mobile traffic by one third to two thirds. Researches of conventional content delivery networking (CDN) with deployment of caches in Evolved Packet Core (EPC) has been studied in \cite{woo2013comparison} and the extension studies relevant to radio access network (RAN) caching have been made in \cite{golrezaei2012femtocaching}. \cite{wang2014cache} pointed out that CCN-capable gateways, routers, and eNBs are expected to be included in 5G and integration with virtualization of cellular network devices also is necessary to be considered.\par
+%
+%
+%%Although some excellent works have been done for wireless network virtualization, most existing works do not consider virtualization with heterogeneous networks (HetNets). However, HetNets have been regarded as one of the key components of the future wireless networks \cite{andrews2012femtocells}. Therefore, it is necessary to take HetNets into account in wireless network virtualization. Furthermore, recent advances of CCN techniques enabling in-network caching should also been compatible with wireless network virtualization. To the best of our knowledge, wireless network virtualization integrated with HetNet and in-network caching has not been well studied in previous works. The contributions of this paper are as follows.
+%%
+%\begin{itemize}
+%\item We propose an \emph{information-centric wireless network virtualization} framework for enabling both wireless network virtualization and ICN in next generation wireless mobile cellular networks.
+%%\item In this novel framework, we present in-networking caching, virtual content, virtual spectrum resource, virtual infrastructure, and virtualization controller strategy aimed to alleviate backhaul is firstly integrated with radio resource allocation and cell association.
+%\item We formulate the virtual resource allocation and in-network caching strategy as an optimization problem, which maximizes the utility of mobile virtual network operators (MVNOs), considering not only the revenue earned by serving end users but also the cost of leasing infrastructure.
+%\item The formulated problem has high computational complexity, and the centralized solution may suffer from signaling overhead, outdated dynamics information, and scalability issues.  Therefore, with recent advances in distributed convex optimization, we develop an efficient \emph{alternating direction method of multipliers} \cite{boyd2011distributed} (ADMM)-based distributed virtual resource allocation and in-network caching scheme.
+%
+%
+%\item Extensive simulations are conducted with different system configurations to show the effectiveness of the proposed scheme. It is shown that we can take the advantages of both wireless network virtualization and in-network caching with the proposed schemes.
+%
+%\item Essentially, it is the unique dynamics tied with virtualization, wireless networks, and information-centric networking that present unique challenges beyond the existing works. We believe that these initial steps we have taken here open a new avenue for information-centric wireless network virtualization, and shed light on efficient and effective designs therein.
+%
+%\end{itemize}
+%
+%The rest of this paper is organized as follows. Section II introduce wireless network virtualization and information-centric networking. The proposed information-centric wireless network virtualization framework is presented in Section III. Section IV discusses the virtual resource allocation and in-networking caching issues. Simulation results are discussed in Section V. Finally, we conclude this study in Section VI.
+%
+%\section{Wireless Network Virtualization and Information-Centric Networking}
+%
+%%
+%In this section, we first discuss business models and logical roles in wireless network virtualization. Then, we introduce information-centric networking.
+%
+%\subsection{Wireless Network Virtualization}
+%With virtualization, physical  cellular network infrastructure resources and physical radio resources can be abstracted and sliced into virtual cellular network resources holding certain corresponding functionalities, and shared by multiple parties through isolating each other. In other words, virtualizing mobile cellular networks is the process of abstracting, slicing, isolating and sharing the physical resources in mobile cellular networks. Generally speaking, the physical resources in cellular networks are comprised of radio spectrum resource and infrastructure resources, including radio access networks (RANs), core networks (CNs), etc.
+%
+%As shown in Fig. \ref{Business_model}(a), two logical roles can be identified after virtualization: \emph{mobile network operator} (MNO) and \emph{service provider} (SP). MNOs own and operate infrastructures and radio resources of physical substrate wireless networks, including licensed spectrum, RANs, backhaul, transmission networks, and CNs. MNOs execute the virtualization of the physical substrate networks \textcolor{red}{so that} some virtual mobile network resources  \textcolor{red}{can be created}. For brevity, we use virtual resources to indicate the virtual mobile network resources. SPs lease, operate and program these virtual resources to offer end-to-end services to mobile users.
+%%In some cases, the MNO becomes InP, who is only responsible for owning and leasing mobile cellular network resources to SPs. Based on these leased and allocated physical resource, SPs are able create and deploy the virtual resources by themselves  to satisfy the requirements of end-to-end services. It should be noted that the ``SP'' here is a very general term. The services provided by SPs can vary from voice to online games. If the services provided by SPs are pure telecommunication services (e.g., enterprise networks, voice and data services), it is more appropriate to use MVNOs to describe this kind of SPs. Meanwhile, some SPs (e.g., BBC, Netflix and Amazon) are focusing on providing more higher layer services (e.g., live stream, video and cloud services).\par
+%%
+%
+%The roles in the business model can be further decoupled into more specialized roles, including SP, infrastructure provider (InP), and mobile virtual network operator (MVNO) \cite{Belbekkouche2012Resource}, as shown in Fig. \ref{Business_model}(b). The functions of them in this model are described as follows.
+%\paragraph{SP} concentrates on providing services to its subscribers based on the virtual networks provided by MVNOs.
+%\paragraph{InP} owns the physical cellular network infrastructure resources and physical radio resources. In some special cases, the physical radio resources may not be owned by InP.
+%\paragraph{MVNO} leases the network resources from InP, creates virtual resources based on the requests from SPs, operates the virtual resources and assigns them to SPs. The rise of MVNOs breaks the value chain dominated by traditional MNOs\cite{Forde2011Exclusive}.
+%\textcolor{red}{Due to the trend of decoupling network services (functions) from specific network hardware, more flexible networking is preferred in future mobile network frameworks (e.g., software-defined network (SDN)). Unlike current physical networks (cellular and core networks) that are designed for all network services (real time and delay-tolerate), a specific virtual network operated by one MVNO may be requested by only one service type (streaming video or online game). Thus, it is important to consider the performance and optimize the revenue of MVNOs. In this paper, we adopt the business model comprised of three roles.}
+%\begin{figure}[t]
+%  \centering
+%%  \vspace{-2.4cm}
+%%  \hspace{5cm}
+%  % Requires \usepackage{graphicx}
+%  \includegraphics[width=8.5cm]{Figures/Business_model.eps}
+%  \caption{Business models of wireless network virtualization. (a) A two-level model; (b) A three-level model. SP - service provider; MNO - mobile network operator; MVNO - mobile virtual network operator; InP - infrastructure provider.}\label{Business_model}
+%\end{figure}
+%
+%\subsection{Information-Centric Networking}
+%
+%The principal concern of ICN is to disseminate, find and deliver information rather than the reachability of end hosts and the maintenance of conversations between them. In ICN, the user requests content without knowledge of the host that can provide it, and the communication follows a receiver-driven principle (i.e., the path is set up by the receiver to the provider), and the data follows the reverse path. The network is then in charge of mapping between the requested content and where it can be found. The match of requested content rather than the findability of the endpoint that provides it thus dictates the establishment of a communication.
+%
+%%\begin{figure}[tp]
+%%\centering
+%%\includegraphics[scale=0.51]{Figures/Information_centric_networks.eps}
+%%\caption{An information-centric network.}
+%%\label{fig: Information_centric_networks}
+%%\end{figure}
+%
+%To be efficient, one key aspect of ICN is naming. Content should be named in such a way as to be independent of the location of the node where the content can be found, which is the main objective of ICN (to separate naming from location). ICN also includes a native caching function in the network, in such a way that nodes can cache the content passing through it for a while (depending on the cache size and replacement algorithm) and deliver them to requesting users. Via this in-network caching mechanism, the content is replicated, and the delivery probability of the content to end users is increased.
+%
+%%Decoupling naming from location also allows native support of mobility or multicast in ICN. Indeed, when users move, they are connected to another node in the ICN network, but since no IP address is used for the routing, it is transparent, as opposed to IP, where the address should be changed. For multicast, as soon as one user has requested a given content, one node can cache it and then deliver it for subsequent requests for the same content. It then naturally creates a multicast-like content delivery.
+%\section{Information-Centric Wireless Network Virtualization}\label{sec:ICWNV}
+%
+%In this section, we present an information-centric wireless network virtualization framework for enabling both wireless network virtualization and ICN in next generation wireless mobile cellular networks.
+%
+%\subsection{Framework}\label{sec:framework}
+%%In this section, we propose a framework for enabling both wireless network virtualization  and ICN, which is called information-centric wireless network virtualization. We present the motivations, radio spectrum resource, mobile network infrastructure, virtual resources, and information-centric virtualization controller in this novel framework.
+%
+%\begin{figure*}[tp]
+%  \centering
+%  % Requires \usepackage{graphicx}
+%  \hspace{-1cm}
+%  \includegraphics[width=15cm]{Figures/VIrtualized_ICN.eps}
+%  \caption{An example framework of information-centric wireless network virtualization. Here, the substrate physical wireless networks are virtualized into two virtual networks. One is running ICN, while another is based on traditional networks. }\label{Virtual_ICN}
+%\end{figure*}
+%
+%%\subsection{Motivations behind Information-Centric Wireless Network Virtualization}
+%Traditionally, dedicated physical resources from specific operators are used \textcolor{red}{for} content delivery. As these physical resources cannot be shared by different operators, \textcolor{red}{different types of content delivery} increase the complexity of the network, as well as the CapEx and OpEx \cite{etsi2013001}. Moreover, content delivery is a very volatile market with new protocols, content formats, device types, etc. With dedicated physical resources, operators do not have the flexibility to react on these rapid changes. Fortunately, wireless network virtualization enables the sharing of not only the infrastructure, but also the content, among different service providers. Consequently, the CapEx and OpEx of wireless access networks, content delivery, as well as core networks, can be reduced significantly.\par
+%%
+%On the other hand, virtual resource allocation is a significant challenge of wireless network virtualization. Virtual resource allocation schemes need to decide how to embed a virtual wireless network on physical networks (e.g., nodes, links and resources that should be picked and optimized). As content retrieval (instead of other traditional parameters, such as spectrum efficiency) is put as a high priority in ICN, the processes in wireless network virtualization (e.g., virtual resource abstracting, slicing, sharing and control) will be significantly affected by ICN.\par
+%%
+%Therefore, jointly considering wireless network virtualization and ICN \textcolor{red}{can} improve the end-to-end network performance. \textcolor{red}{However, difficulties of combining ICN and wireless virtualization are rising from following aspects. Firstly, abstracting and slicing physical resource in virtualization require the status information of global networks (including RAN and CN) and optimization of parameters. Introducing cache as physical resources to be virtualized expands current optimization degrees to more degrees (cache strategies). Consequently, dynamic network optimization turns out to be more complex and time consuming. Secondly, unlike traditional network resources (antenna, spectrum, power and routers) serving connection, cache is designed for content that is in lower layers. To globally virtualize the network, features and benefits of caching ought to be transferred to parameters of network performance or virtualization gain. In addition, network virtualization and ICN are developed separately and across many layers, which leads less connection and standard protocols to exist. To be sure, these issues cannot be answered in one paper. Nevertheless, our paper tries to narrow these gaps through proposing a framework and a optimization problem.\par}
+%%
+%We propose a framework of information-centric wireless network virtualization, as shown in Fig. \ref{Virtual_ICN}. \textcolor{red}{In this example, based on the requests of service 1 and 2, two virtual networks are created and embedded on the substrate physical wireless networks. The differences between them are that ICN functions are integrated in left one and cached content can be shared. The quality-of-service (QoS) requirements and properties of content are various from different services. A personal real-time service (e.g., call, text, video meeting and etc.)  prefers to request a virtual network without ICN because the content in these service are private and with very low reuse probability. In contrast, a virtual network with ICN functions is more attractive to a streaming video service (e.g., youtube, Netflex and etc.). Virtual ICN can provide less delay and efficient backhaul access.} End users logically connect to the virtual network from where they subscribe to the service, while they physically connect to the physical network. A virtual wireless network controller needs to be deployed at the network to realize the virtualization process\cite{etsi2013001}.\par
+%%
+%\subsection{Virtualization Scheme}\label{sec:scheme}
+%%
+%In this subsection, we describe a novel virtualization scheme in the proposed information-centric wireless network virtualization framework, based on the observation that MVNOs will play a key role in future mobile network markets\cite{Forde2011Exclusive}. As mentioned in the above subsections, MVNOs will lease substrate mobile networks from InPs and manage these networks through their own policies. After getting substrate networks, MVNOs have to virtualize and slice them, then provide virtual networks to SPs.
+%%Two important properties of virtual network are isolation and customization (or programmable)\cite{LY15}. Therefore, inspired by the virtual time tagging scheme \cite{Kokku2012NVS} and virtual resource block and bearer \cite{3gpp.36.211},
+%In this paper, we propose a flexible and simple virtualization scheme by introducing a new logical element called \emph{virtual bearer} (VB) in the proposed framework.
+%
+%%
+%Specifically, each VB is a bandwidth-time resource unit. VB looks very similar with physical resource block (PRB) in LTE systems. They are both the isolated resource \textcolor{red}{units}. However, there are some differences between them. Firstly, the time-scale is different. The time length of each PRB is a time slot (e.g., 0.5ms in LTE), but SPs and MVNO can negotiate and pre-define the time length of VBs. For instance, a video SP may ask several minutes as the time length of the VB. Secondly, the owners of VBs are SPs, who may be not familiar with physical wireless networks \textcolor{red}{are} just interested in QoS provided to end users.  \textcolor{red}{Thus, a well-defined VB between SPs and MVNOs is very important. By contrast, PRBs are owned and controlled by InPs. Generally speaking, VB in virtualization is a resource unit standing at side of network service rather than physical parameters}.\par
+%%
+%\begin{algorithm}[t]
+%\caption{Virtualization in the Proposed Framework}\label{Alg: Scheme}
+%\begin{algorithmic}[1]
+%\STATE \textbf{Initialization}\\
+%a) \emph{Slicing:} The MVNO generates certain number of virtual bearers for SPs based on the network capacity and the current network status.\\
+%b) \emph{Define virtual resources:} The MVNO defines the properties (e.g., time length, data rate, and priority) for each virtual bearer based on the pre-agreements with SPs.\\
+%c) \emph{Provide virtual resources:} The MVNO delivers virtual bearers to the corresponding SPs.
+%\STATE \textbf{Scheduling}\\
+%a) \emph{Programming:} Each SP allocates appropriate number of virtual bearers to each end user based on its QoS (e.g., delay and data rate).\\
+%b) MVNO receives the scheduling information about the next potential served users from SPs.\\
+%c) \emph{Isolating:} The MVNO converts the properties of each virtual bearer to data rate requirements and prepares the physical resources for each users.\\
+%d) \emph{Caching:} Based on the content of users, MVNO should jointly decide the caching strategy.
+%\STATE \textbf{Mapping} The MVNO allocates physical resources (e.g., BS, radio resource, and cache space) to each end user based on the current network status and cache status.
+%\end{algorithmic}
+%\end{algorithm}
+%%
+%After defining VBs, the virtualization process is summarized in Algorithm \ref{Alg: Scheme}. The VBs are generated by MVNOs based on the current status of network and content cache. At each scheduling period, SPs can allocate VBs to their own end users by their requirements of services. Let $\bar{r}$ be the data rate of each VB, $\bar{t}$ be the length of these VBs, and $n_k$ be the number of VBs allocated to user $k$. An MVNO has to allocate proper and enough physical resources to user $k$, so that the data of user $k$ can be transmitted by at least $\bar{r}n_k$ in the coming $t$ seconds. This mapping process includes not only spectrum, time slot and power, but also BSs selection (user association) and content cache, which will be discussed in the next subsection. Since the wireless channel is varying with time, it should be noted that $\bar{r}n_k$ is the minimum requirement of data rate, thus the actual data rate may be higher than $\bar{r}n_k$ to meet the requirement. \par
+%%
+%With our proposed virtualization scheme, the two important performance metrics, delay and data rate, can both be controlled by SPs. SPs can allocate resources based on their own transmission policies and even networking protocols, so that  customization is realized. By using the correct mapping, isolation is also guaranteed, because VBs are independent with each other. An SP does not need to know the existence of other SPs, and its behavior of transmission management will not affect other SPs. Compared to existing mechanisms (e.g., defining multiple QoS levels in LTE), our proposed virtualization scheme is more flexible for SPs. \par
+%%
+%Therefore, a feasible and efficient algorithm to enable the mapping process is the key of successfully implementing virtualization in the proposed framework. MVNOs can benefit from this algorithm, not only because it provides the solution of virtualization, but also because it can maximize MVNOs' revenue through allocating resources. We will formulate the virtual resource allocation and in-network caching strategy as an optimization problem in the following.
+%%Before these, we need to describe the system model of our network in the following section.
+%%
+%\section{Virtual Resource Allocation and In-network Caching}
+%%
+%An important requirement in the proposed framework of information-centric wireless network virtualization is an efficient virtual resource allocation and in-network caching strategy. In this section, we formulate the virtual resource allocation and in-network caching strategy as an optimization problem.
+%\subsection{System Model}
+%\label{sec:sysmod}
+%%
+%In this subsection, we present the system model for the wireless mobile cellular network, virtualization, caching, and utility function of MVNOs.
+%%A general single-input-single-output (SISO) downlink cellular network is considered in our system with assuming perfect frequency and time synchronization as well as perfect channel estimation.
+%%
+%
+%\subsubsection{Wireless Mobile Cellular Network Model}
+%\label{sec:commmod}
+%%
+%We consider a mobile cellular network with $J$ BSs. The set of BSs is $\mathcal{J}$, and $j$ is used to indicate one of the BSs. In this paper, the cellular network is limited in an area, where there are only one macro BS and several small cell BSs. These BSs belong to different InPs with different leasing prices. Even we only consider a single macrocell system in our paper, it can be easily extended to the multi-cell case. Let $\mathcal{I}$ denote the set of SPs. For each SP $i$, each allocated user is denoted by $k_i$, and $\mathcal{K}_i$ is the set of users of SP $i$.  \par
+%%
+%The licensed spectrum used by different InPs is orthogonal, which means there is no interference between InPs. The spectrum used within in one InP is overlaid, which means downlink interference between macrocell and  \textcolor{red}{small cells} as well as among  \textcolor{red}{small cells} are both considered. The spectrum bandwidth allocated to BS $j$ is $B_j$ Hz, and the backhaul capacity of BS $j$ is $C_j$ bps. Fixed equal power allocation mechanism is used, where the normalized transmit power on BS $j$ is $p_j$ Watts/Hz. Therefore, by using Shannon bound, the spectrum efficiency of user $k_i$ who associates with BS $j$ is
+%\begin{equation}
+%r_{{k_i}j}=\log_2\left(1+\gamma_{{k_i}j}\right)
+%\end{equation}\label{SpeEffi}
+%\noindent where $\gamma_{{k_i}j}=g_{{k_i}j}p_j/\left(\sum_{l,l\ne j}g_{{k_i}l}p_l+\sigma\right)$ is the signal to interference-plus-noise ratio (SINR) between user $k_i$ and BS $j$. $g_{{k_i}j}$ is the large-scale channel gain that includes pathloss and shadowing. $\sigma$ is the power spectrum density of additive white Gaussian noise. \par
+%%
+%Let $x_{{k_i}j}$ denote the association indicator, where $x_{{k_i}j}=1$ means that user $k_i$ associates to BS $j$; otherwise $x_{{k_i}j}=0$. Practically, each user only  associates to only one BS; thus $\sum_{j\in \mathcal{J}}x_{{k_i}j}=1$. $y_{{k_i}j}\in [0,1]$ is used to denote the percentage of radio resource allocated by BS $j$ to user $k_i$, $\sum_{i\in \mathcal{I}, k_i\in \mathcal{K}_i}y_{{k_i}j}\leq 1$. The expected instantaneous data rate of user $k_i$ is
+%\begin{equation}\label{DataRate}
+%R_{{k_i}j}=\sum_{j\in \mathcal{J}}x_{{k_i}j}y_{{k_i}j}B_jr_{{k_i}j}
+%\end{equation}
+%%
+%In our model, we assume the backhaul  bandwidth usage of user $k_i$ is the same as instantaneous data rate $R_{{k_i}j}$\cite{ng2012energy}. Thus, the total required bandwidth of BS $j$ is $\sum_{i\in \mathcal{I}, k_i\in \mathcal{K}_i}R_{{k_i}j}$. Since the capacity of backhaul is limited, $\sum_{i\in \mathcal{I}, k_i\in \mathcal{K}_i}R_{{k_i}j}\leq C_j$ must hold.
+%
+%\subsubsection{Virtualization Model}
+%\label{sec:vir_mod}
+%%
+%%The business model used in our paper is given in \cite{}. Briefly explaining, infrastructure providers (InPs) provide (by leasing) the physical substrate infrastructure (e.g., data center, radio access networks (RANs) and backhaul networks) to MVNOs while service providers (SPs) lease virtual network from MVNOs to provide specific services to end users. Obviously, with mobile network virtualization, MVNOs will play a key role in future mobile network exist as a "connector" in the network shown in Fig. \ref{Business_Model}. The virtualized mobile networks can be to \emph{bandwidth-based} virtual resource \cite{Kokku2012NVS} with charging using fee. Each SP provides certain services (e.g., video, voice or game) to its users through the virtualized resources. To realize virtualization, resources of substrate mobile networks (e.g., base stations (BSs), radio resource, computing resource, storage resource) should be allocated to each \emph{slice} (virtual resource allocated to one SP) dynamically by MVNO based on the contract with SPs\cite{LY15}. The virtualization and management of slices is executed by \emph{wireless virtualization controller} (or called hypervisor in some researches) where the requirements of virtualization\cite{LY15} (e.g., isolation, customization and utilization) can be realized. The wireless virtualization controller can be equipped in a control center centralized or distributed at each BS.\par
+%%
+%\textcolor{red}{In our business model, the task of MVNOs is that lease physical resources from InPs and slice (virtualize) them to virtual network provided to SPs. Specifically, MVNO should dynamically pay the usage of radio resource (e.g., spectrum) to InPs of RANs and bandwidth (e.g., data rate) consumption to InPs of backhaul. To lease physical resources to the MVNO, InPs charge the using fee based on MVNO's usage. without losing generality, we assume that the InPs of RANs and backhaul are different. The unit price of spectrum of BS $j$ is defined as $\alpha_j$ per Hz and price of backhaul is defined as $\beta_j$ per bps.}\par
+%%
+%With virtualization where slices are bandwidth-based, each SP can schedule the next serving users and allocate necessary bandwidth to users based on its own QoS requirements. Assuming the pre-agreed bandwidth of slice allocated to SP $i$ is $\bar{R}_i$, SP can allocate any data rate $\bar{r}_{k_i}$ to its serving user $k_i$ under the constrains $\sum_{k_i\in\mathcal{K}_i}\bar{r}_{k_i}\leq\bar{R}_i$, where $\mathcal{K}_i$ is the set of the scheduled users of SP $i$. Thus, when the MVNO conducts the allocation of substrate resources to user $k_i$, $\bar{r}_{k_i}$ requested by SP $i$ should be guaranteed; otherwise the SP will not pay for this user since the agreement is not satisfied. \textcolor{red}{Similarly to InPs, multiple SPs are considered in our model. The access fee of VN requested by SP $i$, charged by MVNO, that is defined $\phi_i$ per bps.}\par
+%%
+%%Obviously, MVNO needs to give payment to InPs based on some pre-agreements policies (the usage of resources). One kind of common policy is called `\emph{pay-as-you-go}' that means InPs will charge MVNO as its actual usage. Specifically, MVNO should dynamically pay the usage of radio resource (e.g., spectrum) to InPs of RANs and bandwidth (e.g., data rate) consumption to InPs of backhaul. However, in future practical systems, MVNOs and InPs might choose another policy called `\emph{one-stop-pay}' that means MVNOs just pay a fixed amount of money no matter how much they use. In our paper, we choose the \emph{pay-as-you-go} to analyze since `one-stop-pay' is a special case of `pay-as-you-go'. In practical networks, unlike big BSs, femtocells are using the Internet (e.g., digital subscriber line or Fiber to the x) as their backhaul\cite{andrews2012femtocells}. Thus, without losing generality, we assume that the InPs of RANs and backhaul are different. The unit price of radio resource set by RANs' InPs corresponding to BS $j$ is $\alpha_j$ units/MHz while the unit price of backhaul set by backhaul InPs is $\beta_j$ units/Mbps. Similarly, multiple SPs are considered in our model and the charging policies between SPs and MVNOs also is `pay-as-you-go' where the payment given by SP $i$ for user $k_i$ is $\phi_i$. \par
+%%
+%%\begin{figure}[ht]
+%%  \centering
+%% \includegraphics[width=9cm]{Figures/Business_Model}
+%%  \caption{Business Model.}\label{Business_Model}
+%%\end{figure}
+%%%
+%%
+%\subsubsection{Caching Model}
+%\label{sec:CachingModel}
+%%
+%%In this subsection, we will present the basic caching strategy model used in our system to release the pressure of backhaul networks.\par
+%%
+%The caching strategy can be controlled by a binary parameter  \textcolor{red}{$z\in \{0,1\}$}\cite{blasco2014learning}. If BS $j$ caches the content that requested by user $k$, $z_{{k}j}=1$; otherwise $z_{{k}j}=0$. For the sake of releasing notation, we use the first user's index to index the content requested by it. Therefore, the expected reward (gain) of a certain caching strategy $\{z_{{1}j},z_{{2}j},...,z_{{K}j}\}$ proposed in \cite{blasco2014learning} is shown as
+%%
+%\begin{equation}\label{TtRwC}
+%Reward\ of\ Caching=\sum_{k\in \mathcal{K}}q_{k}o_{{k}j}z_{{k}j}
+%\end{equation}
+%%
+%where $q_{k_i}$ is the request rate of the content requested by user $k_i$, and $o_{{k}j}$ is the gain getting through caching the content.
+%%(\ref{TtRwC}) is proposed in \cite{blasco2014learning}.
+%
+%The authors in \cite{wang2014cache} and \cite{fiore2009cache} claimed that the caching gain $o_{{k}j}$ of mobile networks can be alleviation of bandwidth and reduction of delay. In this paper, we choose the alleviation of backhaul bandwidth as the gain (reward) of caching. Therefore, (\ref{TtRwC}) can be represented as the expected released bandwidth of backhaul in the future
+%%
+%\begin{equation}\label{TtReleBkh}
+%\Delta C_j=\sum_{i\in \mathcal{I}, k_i\in \mathcal{K}_i}q_{k_i}\bar{R}_jx_{{k_i}j}z_{{k_i}j}
+%\end{equation}
+%%
+%where $\bar{R}_j$ is the average single user data rate of BS $j$. \textcolor{red}{$\Delta C_j$ is an estimated gain of caching, but can reflect the long term benefit of introducing cache into virtualization networks.} It should be noted that the storage of BS $j$ may be limited. Thus, the cached content cannot be larger than  remaining space of cache $Z_j$ at BS $j$. Specifically,  $\sum_{i\in \mathcal{I}, k_i\in\mathcal{K}_i}x_{{k_i}j}z_{{k_i}j}s_{k_i}\leq Z_j$ must hold, where $s_{k_i}$ is the size of the content requested by user $k_i$. In this paper, we assume the size of all the content are the same, then $s_{k_i}=1$. \par
+%%
+%Obviously, the performance of caching is significantly depended on the request rate (relative popularity of content)\cite{fricker2012impact}. From observations and statistics\cite{fricker2012impact}, if the \textcolor{red}{size of content is} constant, the quest rate $q(n)$ for the $n$-th most popular content follows Zipf popularity distribution, i.e., $q(n)=1/{n^\alpha}$, where $\alpha$ is constant. Typically, $\alpha$ is 0.56 \cite{golrezaei2012femtocaching}. $q(n)$ is also called user request profile (URP). Thus, if the content requested by user $k_i$ is known, the request rate $q_{k_i}$ can be derived from $q(n)$. Actually, the request rate of content is an uncertain field as the modeling of request rate is still studied by many researches. Nevertheless, this is beyond the scope of our paper, since we focus on a caching strategy with known request rate.
+%%
+%\subsubsection{Utility Function}
+%\label{sec:utilmod}
+%%
+%%As we mentioned before, MVNO has to connect multiple InPs and multiple SPs and tries to maximize their utility at the same time. Thus, in this subsection, we will model the utility of MVNO. \par
+%%
+%Let us consider the case where user $k$ is associated with BS $j$. The revenue, radio resource cost and backhaul cost are $\phi_iB_jr_{{k_i}j}$, $\alpha_jB_j$ and $\beta_jB_jr_{{k_i}j}$, respectively, where $\phi_i$,$\alpha_j$,$\beta_j$ are defined in Subsection \ref{sec:vir_mod}. Thus, the
+%net revenue of allocating radio resource to user $k$ is defined as
+%%
+%\begin{equation}\label{incoming1}
+%a_{{k_i}j}=\phi_iB_jr_{{k_i}j}-\alpha_jB_j-\beta_jB_jr_{{k_i}j}
+%\end{equation}
+%%
+%According to (\ref{TtReleBkh}), the expected saved backhaul by caching the content of user $k$ is $q_{k_i}\bar{R}_j$. Thus, the saved cost can be defined as
+%%
+%\begin{equation}\label{incoming2}
+%b_{{k_i}j}=\beta_jq_{k_i}\bar{R}_j
+%\end{equation}
+%%
+%Since the proportion of radio resource allocated to user $k$ is controlled by $y_{{k_i}j}$ and the caching strategy is $z_{{k_i}j}$, we can formulate the total utility of the MVNO by
+%\begin{equation}\label{Lrevenue}
+%U_{total}=\sum_{\mathcal{I},\mathcal{K},\mathcal{J}}u\left(a_{{k_i}j}y_{{k_i}j}x_{{k_i}j}+b_{{k_i}j}z_{{k_i}j}x_{{k_i}j}\right)
+%\end{equation}
+%%
+%where $u(\cdot)$ is a utility function that is a nondecreasing and convex function normally. In this paper, we adopt the well-known logarithmic function to our utility function. The logarithmic function has been widely used in the literature \cite{bethanabhotla2014user}. Namely,
+%%
+%\begin{equation}\label{utilityfunc}
+%u(x) = \left\{ \begin{array}{ll}
+%\log x &  x > 0\\
+%-\infty  & \textrm{otherwise}
+%\end{array} \right.
+%\end{equation}
+%%
+%\subsection{Problem Formulation}
+%\label{sec:probform}
+%%
+%In this subsection, we will formulate an optimization problem to maximize the aggregate utility of the MVNO. We provide a short overview of this subsection in the following list:
+%\begin{itemize}
+%\item \emph{Formulation:} an optimization problem is introduced, which involves finding the association indicator $\{x_{{k_i}j}\}$, resources allocation parameters $\{y_{{k_i}j}\}$ and $\{z_{{k_i}j}\}$ corresponding to caching strategy.
+%\item \emph{Relaxation:} the binary condition of $\{x_{{k_i}j}\}$ and $\{z_{{k_i}j}\}$ are relaxed.
+%\item \emph{Convexity:} the convexity of the relaxed problem is shown by introducing an equivalent problem.
+%\end{itemize}
+%%%
+%\subsubsection{Formulation}
+%The aggregate utility maximization problem is shown as follows:
+%%
+%\begin{equation}\label{orgProb}
+%\begin{aligned}
+%&\max_{x_{{k_i}j},y_{{k_i}j},z_{{k_i}j}\in \mathcal{R}^+} \quad
+%\sum_{\mathcal{I},\mathcal{K},\mathcal{J}}x_{{k_i}j}u\left(a_{{k_i}j}y_{{k_i}j}+b_{{k_i}j}z_{{k_i}j}\right)\\
+%& \begin{array}{r@{\quad}r@{\quad}r@{}l@{\quad}l}
+%s.t.
+%&C1:&\sum_{\mathcal{J}}x_{{k_i}j}&=1, &\forall i,j,k\\ %association
+%&C2:&\sum_{\mathcal{I},\mathcal{K}}x_{{k_i}j}y_{{k_i}j}&\leq 1, & \forall j\\ %radio resource
+%&C3:&\sum_{\mathcal{I},\mathcal{K}}x_{{k_i}j}y_{{k_i}j}R_{{k_i}j}&\leq C_j, & \forall j\\%backhaul
+%&C4: &\sum_{\mathcal{J}}x_{{k_i}j}y_{{k_i}j}R_{{k_i}j}&\geq r_{k_i},  &\forall i,k\\ %virtualization
+%&C5:&\sum_{\mathcal{I},\mathcal{K}}x_{{k_i}j}z_{{k_i}j}&\leq Z_j,  & \forall j\\ %cache
+%\end{array}
+%\end{aligned}
+%\end{equation}
+%%
+%It is equivalent to take $x_{{k_i}j}$ outside utility function without losing any optimality. If $x=1$, we have $xu(y,z)=u(x,y,z)$; if $x=0$ that means user is not served by BS so that no resource will be allocated, $u(x,y,z)=0$ and $xu(y,z)=0$. Note that $x_{{k_i}j}\leq 1,y_{{k_i}j}\leq 1,z_{{k_i}j}\leq 1$ are eliminated by giving C1, C2 and C5. $\{x_{{k_i}j}\}$ and $\{z_{{k_i}j}\}$ are Boolean. The first constraint in problem (\ref{orgProb}) enforces that users can only be  associated with one BS at the same time. Constraints C2 and C3 reflect that the sum of allocated resource of all users being served by BS $j$ cannot exceed the total radio resource and backhaul bandwidth. Inequality (\ref{orgProb}) C4 is due to the minimum virtualization data rate requirements from Subsection \ref{sec:vir_mod}. The constraints of (\ref{orgProb}) C5 ensures that the caching strategy is limited in the empty space of cache of each BS. $x_{{k_i}j}y_{{k_i}j}$ and $x_{{k_i}j}z_{{k_i}j}$ appeared in C2 to C5 are equivalent to $y_{{k_i}j}$ and $z_{{k_i}j}$. Explanation is in \emph{Proposition} \ref{Prop_EquPlb}. We use $x_{{k_i}j}y_{{k_i}j}$ instead of $y_{{k_i}j}$, because it is more convenient to transfer it to a convex problem. \par
+%%
+%Problem (\ref{orgProb}) is difficult to solve based on the following observations:
+%%
+%\begin{itemize}
+%\item The feasible set of (\ref{orgProb}) is non-convex as a result of the binary variables $\{x_{{k_i}j}\}$ and $\{z_{{k_i}j}\}$.
+%\item The objective function is not convex due to the product relationship between $\{x_{{k_i}j}\}$ and convex function of $\{y_{{k_i}j}\}$ as well as $\{z_{{k_i}j}\}$.
+%\item The size of the problem is very large. \textcolor{red}{In future cellular networks, the density and number of small cells will rise significantly so that the size of variables $\{x_{{k_i}j}\}$ , $\{y_{{k_i}j}\}$ as well as $\{z_{{k_i}j}\}$ will become very large.}
+%\end{itemize}
+%%
+%As is well known, a mixed discrete and non-convex optimization problem is expected to be very challenging to find its global optimum. Thus, we have to simplify problem (\ref{orgProb}). A relaxation of the binary conditions of $\{x_{{k_i}j}\}$ and $\{z_{{k_i}j}\}$ constitutes the first step of solving the problem.
+%%
+%\subsection{Problem Transformation}
+%\label{sec:probTrans}
+%%
+%Following the approach in \cite{ye2013user} and \cite{fooladivanda2013joint}, we relax $\{x_{{k_i}j}\}$ and $\{z_{{k_i}j}\}$ in C6 and C8 of problem (\ref{orgProb}) to be real value variables, $0 \leq x_{{k_i}j}\leq 1$ and $0 \leq z_{{k_i}j}\leq 1$. The relaxed $x_{{k_i}j}$ can be sensible and meaningfully interpreted as the time sharing factor that represents the ratio of time when user $k_i$ associates with BS $j$ \cite{fooladivanda2013joint}. Similar to $x_{{k_i}j}$, the relaxed $z_{{k_i}j}$ can be interpreted as the time fraction of sharing one unit cache. However, even after relaxing the variables, the problem is still non-convex due to the non-convex objective function. Thus, to make problem (\ref{orgProb}) tractable and solvable, a second step is necessary. Firstly, we give a proposition of the equivalent problem of (\ref{orgProb}).
+%%
+%\begin{proposition}\label{Prop_EquPlb}
+%If we define $\tilde{y}_{{k_i}j}=y_{{k_i}j}x_{{k_i}j}$, $\tilde{z}_{{k_i}j}=z_{{k_i}j}x_{{k_i}j}$ and $x_{{k_i}j}u\left[\left(a_{{k_i}j}\tilde{y}_{{k_i}j}+b_{{k_i}j}\tilde{z}_{{k_i}j}\right)/x_{{k_i}j}\right]=0$ for $x_{{k_i}j}=0$, there exists an equivalent formulation of problem (\ref{orgProb}) as follows:
+%%
+%\begin{equation}\label{EqvProb}
+%\begin{aligned}
+%&\max \quad
+%\sum_{\mathcal{I},\mathcal{K},\mathcal{J}}x_{{k_i}j}u\left(\frac{a_{{k_i}j}\tilde{y}_{{k_i}j}+b_{{k_i}j}\tilde{z}_{{k_i}j}}{x_{{k_i}j}}\right)\\
+%& \begin{array}{r@{\quad}r@{\quad}r@{}l@{\quad}l}
+%s.t.
+%&C1:&\sum_{\mathcal{J}}x_{{k_i}j}&=1, &\forall i,j,k\\ %association
+%&\tilde{C}2:&\sum_{\mathcal{I},\mathcal{K}}\tilde{y}_{{k_i}j}&\leq 1, & \forall j\\ %radio resource
+%&\tilde{C}3:&\sum_{\mathcal{I},\mathcal{K}}\tilde{y}_{{k_i}j}R_{{k_i}j}-C_j&\leq 0, & \forall j\\%backhaul
+%&\tilde{C}4:&r_{k_i}-\sum_{\mathcal{J}}\tilde{y}_{{k_i}j}R_{{k_i}j}&\leq 0,  &\forall i,k\\ %virtualization
+%&\tilde{C}5:&\sum_{\mathcal{I},\mathcal{K}}\tilde{z}_{{k_i}j} -Z_j&\leq 0,  & \forall j\\ %cache
+%\end{array}
+%\end{aligned}
+%\end{equation}
+%\end{proposition}
+%%
+%\begin{proof}\label{proof:EquPlb}
+%This proof of Proposition \ref{Prop_EquPlb} is motivated by \cite{gortzen2012optimality}. The relaxed problem (\ref{orgProb}) can be recovered by substitution of variable $\tilde{y}_{{k_i}j}=y_{{k_i}j}x_{{k_i}j}$ and $\tilde{z}_{{k_i}j}=z_{{k_i}j}x_{{k_i}j}$ into problem (\ref{EqvProb}) except $x_{{k_i}j}=0$. Due to the loss of definition when $x_{{k_i}j}=0$, it is not a one-to-one mapping. However, if $x_{{k_i}j}=0$, $y_{{k_i}j}=0$ certainly hold because of the optimality. Obviously, BS $j$ does not allocate any resources to any user if the user does not associate with BS $j$. Thus, it becomes a one-to-one mapping when the completed mapping between $\{x_{{k_i}j},y_{{k_i}j},z_{{k_i}j}\}$ and $\{x_{{k_i}j},\tilde{y}_{{k_i}j},\tilde{z}_{{k_i}j}\}$ is
+%\begin{equation}
+%y_{{k_i}j} = \left\{ \begin{array}{ll}
+%\tilde{y}_{{k_i}j}/{x_{{k_i}j}} &  x_{{k_i}j}>0\\
+%0 & \textrm{otherwise}
+%\end{array} \right.
+%\end{equation}
+%and
+%\begin{equation}
+%z_{{k_i}j} = \left\{ \begin{array}{ll}
+%\tilde{z}_{{k_i}j}/{x_{{k_i}j}} &  x_{{k_i}j}>0\\
+%0 & \textrm{otherwise}
+%\end{array} \right.
+%\end{equation}
+%\end{proof}
+%%
+%With Proposition \ref{Prop_EquPlb} and the well-known perspective function\cite{boyd2009convex}, we can have the following theory that gives the convexity of problem (\ref{EqvProb}).
+%%
+%\subsection{Convexity}
+%\begin{theorem}\label{theo_convexity}
+%If problem (\ref{EqvProb}) is feasible, it is jointly convex with respect to all optimization variables $x_{{k_i}j},y_{{k_i}j},z_{{k_i}j},\forall i,j,k$.
+%\end{theorem}
+%
+%\begin{proof}\label{proof:convexity}
+%%
+%The proof of the convexity is similar to \cite{gortzen2012optimality}, we describe briefly as follows. Firstly, we prove the continuity of the function $f(t,x)=x\log (t/x),t\geq0,x\geq0$ at the point $x=0$. Let $s=t/x$,
+%\begin{equation}
+%\nonumber f(t,0)=\lim_{x \rightarrow 0}x\cdot\log\frac{t}{x}=\lim_{s \rightarrow \infty}\frac{t}{s}\log s=t\lim_{s \rightarrow \infty}\frac{\log s}{s}=0
+%\end{equation}
+%$f(t,x)=x\log (t/x),t\geq0,x\geq0$ is the well-known \emph{perspective operation}\cite{boyd2009convex} of $\log$, where convexity is preserved. The perspective function of a concave function is a concave function.\par
+%%
+%Since $x_{{k_i}j}\log\left[\left(a_{{k_i}j}\tilde{y}_{{k_i}j}+b_{{k_i}j}\tilde{z}_{{k_i}j}\right)/x_{{k_i}j}\right]=0$ for $x_{{k_i}j}=0$ and $\left(a_{{k_i}j}\tilde{y}_{{k_i}j}+b_{{k_i}j}\tilde{z}_{{k_i}j}\right)$ is \textcolor{red}{nothing but} a linear combination of $y$ and $z$, $x_{{k_i}j}\log\left[\left(a_{{k_i}j}\tilde{y}_{{k_i}j}+b_{{k_i}j}\tilde{z}_{{k_i}j}\right)/x_{{k_i}j}\right]$ is the perspective function of $\log\left(a_{{k_i}j}\tilde{y}_{{k_i}j}+b_{{k_i}j}\tilde{z}_{{k_i}j}\right)$ that is concave. Our objective function in problem (\ref{EqvProb}) is a sum of concave function, and all of the constrains are linear. Thus, problem (\ref{EqvProb}) is a convex problem.
+%\end{proof}\par
+%%
+%Since problem (\ref{EqvProb}) is a convex problem, a lot of methods (e.g., interior point method) can be used to solve it. However, as we mentioned above, with the increase of the number of BSs, the size of problem will be very large. Practically, even with a powerful computing center, the overhead of delivering enough local information (e.g., channel status information (CSI)) to a global center is extremely inefficient. Therefore, for the purpose of implementation, a distributed algorithm running on each BS should be adopted. But, due to the constrains $C1$, $\tilde{C}3-\tilde{C}5$ of problem (\ref{EqvProb}), the problem is not separable with respect to the BSs. Specifically, the user association indicator that represents the connection between users and BSs is a global variable. Thus, in order to achieve a decentralized optimization algorithm, this coupling has to be decoupled appropriately, which is discussed in the following.
+%%
+%\subsection{Decoupling of Association Indicators}\label{sec:decouple}
+%
+%In order to solve problem (\ref{EqvProb}), we introduce \emph{local} copies of the global association indicators. Each local variable can be considered as the preference of each BS about the association of users. Let us introduce a set of new variables to represent the local copies of our association indicators. To lighten the notation, from now on, we use $k$ to denote all the users instead of $k_i$. If we define $\mathbf{x}$ as the vector of association indicators $\{x_{kl}, \forall l,k\}$ (note that we change the index of BS from $j$ to $l$), the local copy of $\mathbf{x}$ at BS $j$ is denoted as $\hat{\mathbf{x}}^j$. Formally,
+%\begin{equation}\label{Copy}
+%\hat{x}^j_{kl}=x_{kl}, \forall j,k,l
+%\end{equation}
+%
+%By means of the local vectors $\hat{\mathbf{x}}^j$, $\tilde{\mathbf{y}}_j$ and $\tilde{\mathbf{z}}_j$, let us define a feasible local variable set for each BS $j \in \mathcal{J}$
+%
+% \begin{equation}\label{Fea_Set}
+%\chi_j = \left\{ \hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\left| \begin{array}{l}
+%\sum_{l \in \mathcal{J}}\hat{x}^j_{kl}=1, \forall j,k\\
+%\sum_{k \in \mathcal{K}}\tilde{y}_{{k}j}\leq 1,  \forall j\\
+%\sum_{k\in\mathcal{K}}\tilde{y}_{{k}j}R_{{k}j}\leq C_j,  \forall j\\
+%\sum_{j\in\mathcal{J}}\tilde{y}_{{k}j}R_{{k}j}\geq r_{k},  \forall k\\
+%\sum_{k\in\mathcal{K}}\tilde{z}_{{k}j}\leq Z_j,   \forall j\\
+%\end{array} \right.\right\}
+%\end{equation}
+%
+%and an associated local utility function, respectively, as
+%
+%\begin{equation}
+%g_j = \left\{ \begin{array}{ll}
+%-\sum_{\mathcal{K}}\hat{x}^j_{kj}u\left[\frac{\left(a_{{k}j}\tilde{y}_{{k}j}+b_{{k}j}\tilde{z}_{{k}j}\right)}{\hat{x}^j_{kl}}\right] & \hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j \in \chi_j\\
+%\infty & \textrm{otherwise}
+%\end{array} \right.
+%\end{equation}
+%
+%With this notation, the global consensus problem of problem (\ref{EqvProb}) can be written as
+%
+%\begin{equation}\label{ConProb}
+%\begin{aligned}
+%&\max \quad
+%G\left(\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\right)=\sum_{\mathcal{J}}g_j\left(\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\right)\\
+%& \begin{array}{r@{\quad}r@{\quad}r@{}l@{\quad}l}
+%s.t.
+%&&\hat{x}^j_{kl}=x_{kl}, \forall j,k,l&&
+%\end{array}
+%\end{aligned}
+%\end{equation}
+%
+%Obviously, our objective function is separable across the BSs in the network. However, the global association variables are still involved in the consensus constraints. In next section, we will apply ADMM to solve problem (\ref{ConProb}) in a distributed manner.
+%%
+%\section{Virtual Resource Allocation and In-Network Caching via Alternating Direction Method of Multipliers}\label{sec:WVADMM}
+%
+%In this section, we first introduce ADMM. Then, we apply ADMM to solve problem (\ref{ConProb}).
+%
+%\subsection{Introduction to Alternating Direction Method of Multipliers with Consensus Constraint}\label{ADMM}
+%%
+%ADMM\cite{boyd2011distributed,eckstein2012augmented} is a simple but powerful algorithm that is well suited to distributed convex optimization. One of the important properties of ADMM is its quick convergence to a modest accuracy of the optimal solution. It has been successfully used in many cases, such as in statistical learning problems, engineering design, multi-period portfolio optimization, time series analysis, network flow, and scheduling \cite{boyd2011distributed,eckstein2012augmented,leinonen2013distributed}.
+%It takes the form of a decomposition-coordination procedure, in which the solutions to small local subproblems are coordinated to find a solution to a large global problem. Furthermore, ADMM can be viewed as an attempt to blend the benefits of dual decomposition and augmented Lagrangian methods for constrained optimization\cite{boyd2011distributed}, \cite{eckstein2012augmented}. Generally, ADMM is able to solve
+%\begin{equation}
+% \begin{aligned}
+%&\min_{\textbf{x},\textbf{z}}\quad
+% f(\textbf{x})+g(\textbf{z})\\
+%& \begin{array}{r@{\quad}r@{\quad}r@{}l@{\quad}l}
+%s.t.
+%&&\ \textbf{A}\textbf{x}+\textbf{B}\textbf{z}=\textbf{c}&&
+%\end{array}
+%\end{aligned}
+%\end{equation}
+%%
+%where $\textbf{x}\in \mathds{{R}}^{q\times 1}$, $\textbf{z}\in \mathds{{R}}^{r\times 1}$, $\textbf{A}\in \mathds{{R}}^{p\times q}$, $\textbf{B}\in \mathds{{R}}^{p\times r}$ and $\textbf{c}\in \mathds{{R}}^{p\times 1}$.
+%There are two basic forms for the ADMM algorithm, namely unscaled form and scaled form. In the unscaled form, the augmented Lagrangian is given as follows.
+%\begin{equation}
+% \begin{split}
+%L_\rho(\textbf{x},\textbf{y},\textbf{z})=f(\textbf{x})+g(\textbf{z})+\textbf{y}^T(\textbf{A}\textbf{x}+\textbf{B}\textbf{z}-\textbf{c})
+%+(\rho/2)\parallel\textbf{A}\textbf{x}+\textbf{B}\textbf{z}-\textbf{c}\parallel_2^2
+%\end{split}
+%\end{equation}
+%where $\textbf{y}\in \mathds{{R}}^{p\times 1}$ is the dual variable vector, $\rho>0$ is the predefined augmented Lagrangian parameter and $\parallel\cdot\parallel_2$ is an Euclidean norm operator. Accordingly, the unscaled ADMM algorithm consists of the following iterations:
+% \begin{align}
+%\textbf{x}^{t+1}:=\arg\min\limits_{\textbf{x}}L_\rho(\textbf{x},\textbf{y}^t,\textbf{z}^t) \\
+%\textbf{z}^{t+1}:=\arg\min\limits_{\textbf{z}}L_\rho(\textbf{x}^{t+1},\textbf{y}^t,\textbf{z}) \\
+%\textbf{y}^{t+1}:=\textbf{y}^t+\rho(\textbf{A}\textbf{x}^{t+1}+\textbf{B}\textbf{z}^{t+1}-\textbf{c})
+%\end{align}
+%where $t$ is the iteration index.\par
+%%
+%Let us consider another problem with local variables $x_i\in\mathbb{R}^n$ and a common global variable $z$:
+%\begin{equation}\label{consensusProblem}
+%\begin{aligned}
+%&\min_{x_i\in\mathbb{R}^n} \quad
+%\sum_{i=1}^Nf_i(x_i)\\
+%& \begin{array}{r@{\quad}r@{\quad}r@{}l@{\quad}l}
+%s.t.
+%&&x_i-z=0,\forall i&&
+%\end{array}
+%\end{aligned}
+%\end{equation}
+%%
+%This is called the global consensus problem, since the constraint is that all the local variables should agree, i.e., be equal. ADMM for problem (\ref{consensusProblem}) can be derived directly from the augmented Lagrangian:
+%\begin{equation}\label{AugmentLagrangin}
+%\begin{split}
+%\mathfrak{L}_\rho\left(x_1,...x_N,y,z\right)=
+%\sum_i^Nf_i(x_i)+(y_i)^T\left(x_i-z\right)+\frac{\rho}{2}\parallel x_i-z\parallel_2^2
+%\end{split}
+%\end{equation}
+%%
+%The resulting ADMM algorithm is the following:
+%\begin{equation}\label{Update1}
+%\begin{split}
+%x_i^{\left[t+1\right]}:=
+%\argmin\{f_i(x_i)+(y_i)^T\left(x_i-z\right)+\frac{\rho}{2}\parallel x_i-z\parallel_2^2\}
+%\end{split}
+%\end{equation}
+%%
+%\begin{equation}\label{Update2}
+%z^{\left[t+1\right]}:=\argmin\sum_i^I\{(y_i)^T\left(x_i-z\right)+\frac{\rho}{2}\parallel x_i-z\parallel_2^2\}
+%\end{equation}
+%%
+%\begin{equation}\label{Update3}
+%{y}^{\left[t+1\right]}=y^{\left[t\right]}+\rho\left(x_i^{\left[t+1\right]}-z^{\left[t+1\right]}\right)
+%\end{equation}
+%%
+%The first and last steps are carried out independently for each $i = 1,...,N$. In the literature, the processing element that handles the global variable $z$ is sometimes called the central collector or the fusion center. The dual variables are separately updated to drive the variables into consensus, and quadratic regularization helps pull the variables toward their average value while still attempting to minimize each local $f_i$. We can interpret consensus ADMM as a method for solving problems in which the objective and constraints are distributed across multiple processors. Each processor only has to handle its own objective and constraint term, plus a quadratic term which is updated each iteration. The quadratic terms (or more accurately, the linear parts of the quadratic terms) are updated in such a way that the variables converge to a common value, which is the solution of the full problem.
+%%
+%\subsection{Problem Solving via ADMM}\label{sec:Solving}
+%%
+%In this section, the proposed algorithm for virtual resource allocation and in-network caching via ADMM is described. According to\cite{boyd2011distributed}, our problem (\ref{ConProb}) is a \emph{global consensus problem}, since the constraint is that all the local variables should agree. The initial step to apply ADMM to problem (\ref{ConProb}) is that an augmented Lagranian with corresponding global consensus constrains should be formed. Let $\lambda^j_{kl},\forall j\in\mathcal{J},l\in\mathcal{J},k\in\mathcal{K}$ be the Lagrange multipliers corresponding to the consensus constraints in problem (\ref{ConProb}). The augmented Lagrangian for problem (\ref{ConProb}) is
+%%
+%\begin{equation}\label{augLag}
+%\begin{split}
+%&\mathfrak{L}_\rho\left(\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}_{j\in\mathcal{J}},\{\mathbf{x}\},\{\mathbf{\lambda}^j\}\right)=\sum_{\mathcal{J}}g_j\left(\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\right)+\\
+%&\sum_{j\in\mathcal{J}}\sum_{k\in\mathcal{K},l\in\mathcal{J}}\lambda^j_{kl}\left(\hat{x}^j_{kl}-x_{kl}\right)+\frac{\rho}{2}\sum_{j\in\mathcal{J}}\sum_{k\in\mathcal{K},l\in\mathcal{J}}\left(\hat{x}^j_{kl}-x_{kl}\right)^2
+%\end{split}
+%\end{equation}
+%%
+%where $\mathbf{\lambda}^j$ is the vector of the Lagrange multipliers and $\rho\in\mathbb{R}_{++}$ is a positive constant parameter for adjusting the convergence speed of the ADMM\cite{boyd2011distributed}. Based on the iteration of AMDD with consensus constraint\cite{boyd2011distributed}, the ADMM method applied to problem (\ref{ConProb}) consists of following sequential optimization steps:
+%%
+%\begin{equation}\label{xhatUpdate}
+%\begin{split}
+%\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}_{j\in\mathcal{J}}^{\left[t+1\right]}:=\argmin\{g_j\left(\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\right)
+%+\sum_{k\in\mathcal{K},l\in\mathcal{J}}\lambda^{j\left[t\right]}_{kl}\left(\hat{x}^j_{kl}-x_{kl}^{\left[t\right]}\right)+\frac{\rho}{2}\sum_{k\in\mathcal{K},l\in\mathcal{J}}\left(\hat{x}^j_{kl}-x_{kl}^{\left[t\right]}\right)^2\}
+%\end{split}
+%\end{equation}
+%%
+%\begin{equation}\label{xUpdate}
+%\begin{split}
+%\{\mathbf{x}\}^{\left[t+1\right]}:=\argmin\{\sum_{j\in\mathcal{J}}\sum_{k\in\mathcal{K},l\in\mathcal{J}}\lambda^{j\left[t\right]}_{kl}\left(\hat{x}^{j\left[t+1\right]}_{kl}-x_{kl}\right)
+%+\frac{\rho}{2}\sum_{j\in\mathcal{J}}\sum_{k\in\mathcal{K},l\in\mathcal{J}}\left(\hat{x}^{j\left[t+1\right]}_{kl}-x_{kl}\right)^2\}
+%\end{split}
+%\end{equation}
+%%
+%\begin{equation}\label{lambdaUpdate}
+%\{\mathbf{\lambda}_j\}^{\left[t+1\right]}_{j\in\mathcal{J}}:=\mathbf{\lambda}_j^{\left[t\right]}
+%+\rho\left(\hat{\mathbf{x}}^{j\left[t+1\right]}-\mathbf{x}^{\left[t+1\right]}\right)
+%\end{equation}
+%%
+%Obviously, the first step (\ref{xhatUpdate}) and third step (\ref{lambdaUpdate}) can be completely decentralized, which find the local optimum association, radio resource allocation and caching strategies, as well as local Lagrange multipliers. The second step (\ref{xUpdate}) can be optimized by a center controller of MVNO. Each step will be presented in the following part of this section.
+%%
+%\subsubsection{$\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}_{j\in\mathcal{J}}$-update}
+%%
+%In step 1, local association, radio resource allocation and caching strategies are separable across each BS $j$. Therefore, $\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}_{j\in\mathcal{J}}$-update can be decomposed into $J$ subproblems, which can be solved locally at each BS. Thus, each BS $j$ solves the following optimization problem at iteration $t$:
+%%
+%\begin{equation}\label{Step1}
+%\begin{aligned}
+%&\max_{\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}} \quad
+%\mathfrak{L}_\rho^j=g_j\left(\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\right)+h_j\left(\hat{\mathbf{x}}^j\right)\\
+%& \begin{array}{r@{\quad}r@{\quad}r@{}l@{\quad}l}
+%s.t.
+%&\sum_{l \in \mathcal{J}}\hat{x}^j_{kl}=1, \forall k,l\\&&
+%\end{array}
+%\end{aligned}
+%\end{equation}
+%%
+%where
+%\begin{equation}\label{h_j}
+%\begin{split}
+%h_j\left(\hat{\mathbf{x}}^j\right)=&\sum_{k\in\mathcal{K},l\in\mathcal{J}}\lambda^j_{kl}\left(\hat{x}^j_{kl}-x_{kl}\right)+ \frac{\rho}{2}\sum_{k\in\mathcal{K},l\in\mathcal{J}}\left(\hat{x}^j_{kl}-x_{kl}\right)^2
+%\end{split}
+%\end{equation}
+%%
+%Apparently, problem (\ref{Step1}) is a convex problem but still intractable to compute the closed form solution. Hence, it should be solved by some general numerical methods (e.g., interior-point methods and successive approximation methods) that provide efficient ways. In this paper, we use the primal-dual interior-point method \cite{boyd2009convex} that provides efficient way for convex problems. The algorithm is summarized in \textbf{Algorithm \ref{Alg: PDIP}}.\par
+%%
+%\begin{algorithm}[t]
+%\caption{Primal-dual interior-point method for $\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}_{j\in\mathcal{J}}$-update}
+%\label{Alg: PDIP}
+%\begin{algorithmic}[1]
+%\STATE \textbf{Initialization}\\
+%Given $\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}\in \chi_j$,$\nu>0$,$\mu>1$,$\epsilon_{feas}>0$,$\epsilon>0$ \\
+%\STATE \textbf{Repeat}\\
+%a)\ \emph{Determine} $s$. Set $t:=\mu m/\hat{\eta}$.\\
+%b)\ Compute primal-dual search direction $\Delta y_{pd}$.\\
+%c)\ \emph{Line Search and update}.\\
+%\quad Determine step length $s>0$ and set $y:=y+s\Delta y_{pd}$.\\
+%d)\ Repeat \textbf{Repeat}:a) to \textbf{Repeat}:c) \textbf{until} \\
+%\quad $\parallel r_{pri}\parallel_2\leq \epsilon_{feas}$, $\parallel r_{dual}\parallel_2\leq\epsilon_{feas}$, and $\hat{\eta}\leq\epsilon$ \\
+%\STATE \textbf{Output}
+%Output the optimal variable $\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}$ and transmit it to the MVNO central controller.
+%\end{algorithmic}
+%\end{algorithm}
+%%
+%In \textbf{Algorithm \ref{Alg: PDIP}}, $\hat{\eta}$ is the surrogate duality gap. $m$ is the number of constrains, which is 5 in problem (\ref{Step1}). $t$ used in the computing of $\Delta y_{pd}$ is set to a factor $\mu$ times $m/\hat{\eta}$. $\Delta y_{pd}$ is primal-dual search direction. Detailed step-by-step description of primal-dual interior method is given in \cite{boyd2009convex}, where the theory background and analysis of primal-dual interior-point method can be also found. The only thing we should note is giving the initial feasible solution. It is easy to set the variables except $\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}$. Considering some special cases, it is not very hard to provide a feasible solution of $\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}\in \chi_j$. Let us consider a very simple example. Supposing that at least one user is in the coverage of BS $j$ where the QoS requested by SP can be guaranteed, BS $j$ set $\hat{x}^j_{kj}=1$ and remaining $\{\hat{x}^j_{k'j}\}=\{0\},k'\ne k$, which means BS $j$ only associates \textcolor{red}{with} user $k$. Since only one user is associated \textcolor{red}{with} BS $j$, all the radio resource and cache will be allocated to this user. The last four sets of constrains in (\ref{Fea_Set}) are satisfied automatically. Moreover, in our algorithm, BS $j$ also needs to give the opinion of other BSs' association without knowing the CSI. Thus, BS $j$ randomly chooses BS ${j'\in\mathcal{J},j'\ne j}$, for the rest of users ${k'\in \mathcal{K}, k'\ne k}$, such that each user has associated \textcolor{red}{with} one and only one BS. After this, the first sets of constrains are guaranteed. \par
+%%
+%Recall that we have relaxed the association indicator to a real value between zero and one instead of a binary variable in Subsection \ref{sec:probTrans}. Thus, we have to recover it to binary after we get the optimum solution of (\ref{xhatUpdate}). The binary recovery deals with computing the marginal benefit for each user $k$. Then, the indicator $\{\mathbf{x}\}$ can be recovered by
+%\begin{equation}\label{Recover}
+%x^j_{nl} = \left\{ \begin{array}{ll}
+%1 &  \textrm{if}~Q^j_{nl}=\max_k \{Q^j_{kl},k\in\mathcal{K}\}~\textrm{and}~Q^j_{kl}>0\\
+%0 & \textrm{otherwise}
+%\end{array} \right.
+%\end{equation}
+%where $Q^j_{nl}=\partial \mathfrak{L}_\rho^j/\partial x^j_{nl}$ is the first partial derivation of $x^j_{nl}$.
+%%
+%\subsubsection{$\{\mathbf{x}\}$-update and $\{\mathbf{\lambda}_j\}$-update}
+%%
+%Compared with the updating of local variables, $\{\mathbf{x}\}$-update and $\{\mathbf{\lambda}_j\}$-update are quite simple since they are only an un-constrained quadratic optimization problems. After the collection of $\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}$ and $\{\mathbf{\lambda}_j\}$, $\{\mathbf{x}\}$-update can be done by many efficient ways\cite{boyd2009convex}. In this paper, we use an interior-point method in the simulations.
+%%
+%\subsubsection{Stop Criteria and Convergence}\label{sec:Stop}
+%%
+%Based on the discussion in \cite{boyd2011distributed}, our ADMM-based algorithm iterates satisfy residual convergence, objective convergence and dual variable convergence as $t \rightarrow \infty$ , because our objective function $\sum_{\mathcal{J}}g_j\left(\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\right)$ is closed, proper and convex and the Lagrangian $\mathfrak{L}_\rho$ has saddle point. The convexity of the objective function has been proven in Section \ref{proof:convexity}. Obviously, all of our variables are bounded and our objective function is also bounded, so that the optimal solution $\left(\hat{\mathbf{x}}^{j\star},\tilde{\mathbf{y}}_j^{\star},\tilde{\mathbf{z}}_j^{\star}\right)$ of problem (\ref{ConProb}) satisfies $G\left(\hat{\mathbf{x}}^{j\star},\tilde{\mathbf{y}}_j^{\star},\tilde{\mathbf{z}}_j^{\star}\right)<\infty$. Since problem (\ref{ConProb}) is convex problem that means the strong duality holds\cite{boyd2009convex}, $\mathfrak{L}_\rho\left(\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}_{j\in\mathcal{J}}^{\star},\{\mathbf{x}\}^{\star},\{\mathbf{\lambda}^j\}^{\star}\right)\leq\mathfrak{L}_\rho\left(\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}_{j\in\mathcal{J}},\{\mathbf{x}\},\{\mathbf{\lambda}^j\}^{\star}\right)$.\par
+%%
+%In \cite{boyd2011distributed}, it is suggested that a reasonable termination criterion is that the \emph{primal residuals} $s^{\left[t+1\right]}_j$ and \emph{dual residuals} $ s^{\left[t+1\right]}_d$ must be small, which are:
+%\begin{equation}\label{equ:StopPriResi1}
+%\parallel s^{\left[t+1\right]}_j\parallel_2 \leq \zeta^{pri}, \forall j
+%\end{equation}
+%and
+%\begin{equation}\label{equ:StopdualResi}
+%\parallel s^{\left[t+1\right]}_{d}\parallel_2 \leq \zeta^{dual}
+%\end{equation}
+%where $\zeta^{pri} > 0$ and $\zeta^{dual} > 0$ are the feasibility tolerances for the primal and dual feasibility conditions, respectively.
+%The primal residuals (that is the residual for the primal feasibility condition) of $j$th BSs at iteration $t+1$ in our paper can be defined as
+%\begin{equation}\label{equ:PriResi1}
+%s^{\left[t+1\right]}_j=\hat{\mathbf{x}}^{j\left[t+1\right]}-\textbf{x}^{\left[t+1\right]}
+%\end{equation}
+%The dual residuals (a residual for the dual feasibility condition)  at iteration $t+1$ can be defined as
+%\begin{equation}\label{equ:PriResi}
+%s^{\left[t+1\right]}_{d}=\textbf{x}^{\left[t+1\right]}-\textbf{x}^{\left[t\right]}
+%\end{equation}
+%%
+%Detailed description of stop criteria of ADMM can be seen in \cite{boyd2011distributed}.\par
+%%
+%\subsubsection{Feasibility and Complexity}\label{sec:FeaConCom}
+%%
+%Our proposed problem becomes infeasible if the resource allocator is unable to satisfy the QoS requirements of at least one of the virtual network users. The feasibility of problem (\ref{EqvProb}) can be guaranteed by an admission control policy. The admission control can constrain the total number of virtual networks and users. The admission control issue will be studied in our future work. Since the number of BSs in HetNet is comparable to the number of users\cite{andrews2012femtocells}, it is not hard to guarantee the feasibility.\par
+%%
+%Assume the  total number of users and BSs are $I$ and $J$, respectively. At each iteration step, the computational complexity of our proposed ADMM at each BS and central controller are both $\mathcal{O}(I\times J)$. If our iteration step is $T$, the total computational complexity is $\mathcal{O}(T\times I\times J)$ and $\mathcal{O}(T\times I\times J)$. Compared to the brutal central algorithm where the the computational complexity is $\mathcal{O}(I^j)$, our proposed algorithm can reduce the complexity significantly.\par
+%%
+%Based on the analysis above, the distributed wireless virtualization algorithm via ADMM can be summarized as \textbf{Algorithm \ref{Alg: ADMM}}.
+%%
+%\begin{algorithm}[t]
+%\caption{Distributed wireless virtualization algorithm via ADMM}
+%\label{Alg: ADMM}
+%\begin{algorithmic}[1]
+%\STATE Initialization\\
+%a)\ At each BS $j$, collect CSI of all users within its coverage; \\
+%b)\ Initialize $\textbf{x}^0\in \chi$, ${\bm \lambda}^0> \textbf{0}$ and a stop criterion threshold $\zeta>0$ at the MVNO controller; \\
+%\FOR{$t=0,1,2,...,$}
+%\STATE a)\ Broadcast $\textbf{x}^{\left[t\right]}$ and ${\bm \lambda}^{\left[t\right]}$ to each BSs;
+%\STATE b)\ At each BS $j$, solve problem (\ref{Step1}) to update $\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}_{j\in\mathcal{J}}^{\left[t+1\right]}$; \\
+%\STATE c)\ At the controller of MVNO, update $\textbf{x}^{\left[t+1\right]}$ by combining the results of $\{\hat{\mathbf{x}}^j,\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}_{j\in\mathcal{J}}^{\left[t+1\right]}$ from each BS;\\
+%\STATE d)\ Update $\textbf{x}^{\left[t+1\right]}$ according to (\ref{xUpdate}) and broadcast $\textbf{x}^{\left[t\right]}$ to each BSs;
+%\STATE e)\ Update ${\bm \lambda}^{\left[t\right]}$ via (\ref{lambdaUpdate}) at the controller of MVNO;
+%\STATE \textbf{if} $s^{\left[t+1\right]}_{dual}=\textbf{x}^{\left[t+1\right]}-\textbf{x}^{\left[t\right]}$ and $\parallel s^{\left[t+1\right]}_j\parallel_2 \leq \zeta^{pri}$, \textbf{then} go to Step 10;
+%\ENDFOR
+%\STATE Output the optimal resource allocation policy $\{\textbf{x}^{\left[t+1\right]},\tilde{\mathbf{y}}_j,\tilde{\mathbf{z}}_j\}_{j\in\mathcal{J}}^{\left[t+1\right]}$.
+%\end{algorithmic}
+%\end{algorithm}
+%%
+%\subsection{Practical Implementations}\label{sec:imple}
+%%
+%According to the discussions in Subsection \ref{sec:Solving}, the proposed ADMM algorithm can be implemented in a distributed manner across the BSs and the controller of the MVNO. The BSs solve their corresponding subproblems in parallel in each iteration to optimize their local variables using local CSI information and transmit their local results to the controller of the MVNO. Then, the controller collects all the local results and coordinates all the BSs to achieve the global consensus based on the consensus constraint. In this way, there is no need to exchange CSI repeatedly between the BSs and controller, which will reduce the signaling overhead significantly. Furthermore, since the combinatorial nature and non-convexity of the considered problem have been removed through the problem transformation in Subsection \ref{sec:probTrans}, the computational complexity to solve the problem has been reduced to a reasonable level and hence the proposed algorithm is attractive in practical networks.
+%%
+%\section{Simulation Results and Discussions}\label{sec:perf}
+%%
+%In the simulations, we consider two RAN InPs, two backhaul InPs, one MVNO, and three SPs. RAN InP 1 owns a two-tier HetNet with one macro BS with price of 100 units/MHz and 10 small BSs with price of 90 units/MHz. RAN InP 2 owns only 10 small BSs with 80 units/MHz. The price of backhaul InPs 1 for macro BS and small BSs of RAN InP 1 is 1 units/Mbps,  while the price of backhaul InP 2 for small BSs of RAN InP 2 is 1.2 units/Mbps. The average numbers of the scheduled users of 3 SPs are assumed to be equal, and the prices for requesting virtual resources are 15units/Mbps, 20 units/Mbps and 18 units/Mbps, respectively. Transmit power of 49dBm for macro BS and of 20dBm for small BSs are considered in our simulations.  The bandwidth is 20MHz. In our simulations, the location of the macro BS is fixed in the center and the locations of 20 small BSs are uniformly distributed in a area where the radius is 250 meters representing urban environment\cite{access2010further}. We user a path loss $L(d)=34+40log(d)$ and $L(d)=37+40log(d)$ to model the macro cell and small cell propagation, respectively \cite{ye2013user}. The lognormal shadowing with standard deviation 8dB for macro cell and 4dB for small cell are assumed in our paper. The power density of thermal noise power is -174dBm/Hz. The total content has 1000 files and the cache space of macro BS and small BSs is 1000 files and 100 files, respectively. The backhaul delay of small BSs is 10ms longer than that of the macro BS. The backhaul capacity of the macro BS is 10Gbps and that of small BSs is 2Gbps.\par
+%%
+%To compare our proposed scheme, three benchmarks are also considered. The first baseline is a centralized scheme based on solving problem (\ref{EqvProb}) by interior methods directly and round up based on (\ref{Recover}). The second baseline is a traditional max-SINR association scheme without virtualization \cite{ye2013user,kushner2004convergence}, in which all users associate to the BSs who provide the maximum received SINR, and each BS performs proportional fairness resource allocation regardless of SPs. The third one is a traditional virtualization scheme mentioned as a option in \cite{Zaki2011LTE}, called hard slicing (bandwidth guarantee), in which each base station slices fixed ratio of the bandwidth to individual SPs no matter SPs use them or not.
+%
+%\subsection{Convergence of the Proposed ADMM-based Scheme}\label{sec:con_ADMM}
+%%
+%Fig. \ref{fig:Convergence} shows the convergence of the proposed ADMM-based scheme and the effect of parameter $\rho$ in ADMM. The y-axis is the total utility of the MVNO, and the x-axis is the iteration step index. We can observe from the figure that the gap between the ADMM-based scheme and the centralized scheme is narrow. This means the effectiveness of the ADMM-based scheme is equivalent to the centralized scheme considering the overall utility. It can be found that the results with different $\rho$ finally converges to almost the same utility value with only a small gap. However, $\rho$ affects the rate of convergence. $\rho=1.0$ gives higher rate than $\rho=0.5$, especially before the 100th iteration. From Fig. \ref{fig:Convergence}, we can see that there is a significant decrease of the utility gap between the centralized scheme and the proposed ADMM-based scheme from the 1st iteration to the 10th iteration. After the 10th iteration, the gain of more iterations is still increasing but with less rate. Thus, there is a tradeoff  between the acceptable utility value and the iteration steps.\par
+%\begin{figure}[t]
+%  \centering
+% \includegraphics[width=9cm]{Figures/Convergence}
+%  \caption{Convergence of ADMM and the effect of $\rho$. The number of users = 20.}\label{fig:Convergence}
+%\end{figure}
+%%
+%\subsection{The Effects of Virtualization}\label{sec:perf_Virtu}
+%%
+%Next, the gain through wireless virtualization is evaluated in the following three aspects: 1) the incomes from SPs, 2) the maximum number of users, and 3) the required data rate of users. \par
+%%
+%\begin{figure}[t]
+%\centering
+%\subfigure[Incomes of all SPs]{\label{fig:Incomes}{\includegraphics[width=0.488\columnwidth]{Figures/Incomes}}}
+%\hspace{.001cm}
+%\subfigure[Incomes of SP 1]{\label{fig:Incomes1}{\includegraphics[width=0.488\columnwidth]{Figures/Incomes1}}}
+%\hspace{.001cm}
+%\subfigure[Incomes of SP 2]{\label{fig:Incomes2}{\includegraphics[width=0.488\columnwidth]{Figures/Incomes2}}}
+%\hspace{.001cm}
+%\subfigure[Incomes of SP 3]{\label{fig:Incomes3}{\includegraphics[width=0.488\columnwidth]{Figures/Incomes3}}}
+%\caption{Comparison of the incomes of the MVNO.}\label{fig:Incomesall}
+%\end{figure}
+%
+%Fig. \ref{fig:Incomes} shows the average total incomes of the MVNO from all 3 SPs. The x-axis is the number of access users and the y-axis is the average total incomes, both from all 3 SPs. We can observe that the performance of our proposed ADMM-based scheme is better than the other two schemes. With the increase of the number of access users, the gap between them is getting wider, which means the ADMM-based scheme works better in dense environments. SPs pay more to the MVNO by using the ADMM-based scheme, because the ADMM-based scheme can satisfy more users and achieve higher throughput than the other two schemes. Hard slicing performs the worst, because many resources are wasted. This inefficiency of hard slicing is caused by fixed resource allocation among SPs.\par
+%%\begin{figure}[th]
+%%  \centering
+%% \includegraphics[width=9cm]{Figures/Incomes}
+%%  \caption{Comparison of the income of the MVNO from total all 3 SPs.}\label{fig:Incomes}
+%%\end{figure}
+%%
+%\begin{figure}[t]
+%  \centering
+%  \subfigure[All SPs]{\label{fig:Users}{\includegraphics[width=0.48\columnwidth]{Figures/Users}}}
+%\hspace{.01cm}
+%\subfigure[SP 1]{\label{fig:Users1}{\includegraphics[width=0.48\columnwidth]{Figures/Users1}}}
+%\hspace{.01cm}
+%\subfigure[SP 2]{\label{fig:Users2}{\includegraphics[width=0.48\columnwidth]{Figures/Users2}}}
+%\hspace{.01cm}
+%\subfigure[SP 3]{\label{fig:Users3}{\includegraphics[width=0.48\columnwidth]{Figures/Users3}}}
+%\caption{Comparison of the maximum number of satisfied users.}\label{fig:Usersall}
+%\end{figure}
+%In our simulation, we set that the unit incomes from three SPs are different (15 for SP1, 20 for SP2, and 18 for SP3). We also evaluate the  income from an individual SP. As shown in Fig. \ref{fig:Incomes1}, Fig. \ref{fig:Incomes2} and Fig. \ref{fig:Incomes3}, the income from SP2 is in the range of 600 to 1600, which is the highest due to the highest unit price of SP2.
+%%Next we will show that the different unit pay will not only affect incomes, also access users. \par
+%
+%
+%%\begin{figure}[t]
+%%\centering
+%%\subfigure[Incomes of SP 1]{\label{fig:Incomes1}{\includegraphics[width=0.65\columnwidth]{Figures/Incomes1}}}
+%%\hspace{.01cm}
+%%\subfigure[Incomes of SP 2]{\label{fig:Incomes2}{\includegraphics[width=0.65\columnwidth]{Figures/Incomes2}}}
+%%\hspace{.01cm}
+%%\subfigure[Incomes of SP 3]{\label{fig:Incomes3}{\includegraphics[width=0.65\columnwidth]{Figures/Incomes3}}}
+%%\caption{Comparison of the income of the MVNO}\label{fig:Incomesall}
+%%\end{figure}
+%%%
+%Fig. \ref{fig:Users} shows the maximum number of satisfied users, where the x-axis is the number of access users and the y-axis is the maximum number of satisfied users. The required data rate of each user is the same, which is 8Mbps, and the number of users of each SP is also the same. From the figure, we can observe that our proposed scheme can almost satisfy all the users when the number of users is less than 40. Even with more than 40 users, the performance of the ADMM-based scheme is better than the other two schemes. We also compare the satisfied users in each individual SP in Fig. \ref{fig:Users1}-\ref{fig:Users3}. Similar observations can be made.\par
+%%\begin{figure}[th]
+%%  \centering
+%% \includegraphics[width=9cm]{Figures/Users}
+%%  \caption{Comparison of the maximum number of satisfied users.}\label{fig:Users}
+%%\end{figure}
+%%
+%%
+%We also evaluate the effects of different required data rates. As shown in Fig. \ref{fig:DataRate}, with the increase of the required data rate, the number of maximum satisfied users decreases for all three schemes. In the low data rate area, all three schemes can satisfy all access users. However, the performance has a significant fall when the data rate is higher than 12Mbps, because the total radio resource is limited.\par
+%\begin{figure}[t]
+%  \centering
+% \includegraphics[width=9cm]{Figures/DataRate}
+%  \caption{The effect of the required data rate. The number of users = 30.}\label{fig:DataRate}
+%\end{figure}
+%
+%\begin{figure}[t]
+%  \centering
+%%  \subfigure[All backhauls costs]{\label{fig:Backhaul}{\includegraphics[width=0.48\columnwidth]{Figures/Backhaul}}}
+%  \includegraphics[width=9cm]{Figures/Backhaul}
+%  \label{fig:Backhaul}
+%%\hspace{.01cm}
+%%\subfigure[Backhaul 1 cost]{\label{fig:Backhaul1}{\includegraphics[width=8.5cm]{Figures/Backhaul1}}}
+%%\hspace{.01cm}
+%%\subfigure[Backhaul 2 cost]{\label{fig:Backhaul2}{\includegraphics[width=0.48\columnwidth]{Figures/Backhaul2}}}
+%\caption{Comparison of the backhaul access costs.}
+%%\label{fig:Backhaulall}
+%\end{figure}
+%%
+%\subsection{The Effects of Caching with Virtualization}\label{sec:perf_cache}
+%%
+%The gain of deploying in-network caching is evaluated next. Fig. (\ref{fig:Backhaul}) shows the average aggregated backhaul access costs used by all users. From Fig. (\ref{fig:Backhaul}), we can observe that all three schemes with in-network caching significantly reduce the total backhaul usage, compared to the cases without in-network caching. This is because the proposed information-centric wireless virtual network framework enables in-network caching, which reduces duplicate content transmissions in networks. It should be noted that the backhaul access costs of the ADMM-based scheme are higher than those of the other two schemes, because the ADMM-based scheme provides better access performance (more users and higher data rate).
+%%The access costs of Backhaul 2 are  shown in Fig. \ref{fig:Backhaul2}, from which we can observe that caching can reduce the pressure of individual InP as well.\par
+%%
+%%\begin{figure}[t]
+%%  \centering
+%% \includegraphics[width=9cm]{Figures/Backhaul}
+%%  \caption{Comparison of the total backhaul access costs.}\label{fig:Backhaul}
+%%\end{figure}
+%
+%%
+%Another important parameter to evaluate the performance is backhaul delay. In Fig. \ref{fig:Delay}, with the increase of backhaul delay, the average delay of users is getting larger. However, by deploying in-networking caching, the delay is much lower than the cases without caching, and the increase of delay can be depressed.\par
+%\begin{figure}[t]
+%  \centering
+% \includegraphics[width=9cm]{Figures/Delay}
+%  \caption{Comparison of the average Delay. The number of users = 30.}\label{fig:Delay}
+%\end{figure}
+%%
+%Fig. \ref{fig:Utility} shows the total utility of the MVNO in different schemes. We can see that the utility of the MVNO increases with the increase of the number of users for all these cases. This is because more payment can be obtained from SPs with the increase of the number of users. From Fig. \ref{fig:Utility}, we can observe that the  proposed ADMM-based scheme gives better performance than the traditional max-SINR and the hard slicing virtualization scheme. Furthermore, by deploying in-network caching, the performance is better than that without caching, because caching can reduce backhaul access costs and lower the delay.
+%%
+%%\begin{figure}[t]
+%%  \centering
+%% \includegraphics[width=8cm]{Figures/Convergence}
+%%  \caption{Convergence of ADMM and the effect of $\rho$. The number of users = 20.}\label{fig:Convergence}
+%%\end{figure}
+%%%
+%%\begin{figure}[t]
+%%\centering
+%%\subfigure[Incomes of all SPs]{\label{fig:Incomes}{\includegraphics[width=0.48\columnwidth]{Figures/Incomes}}}
+%%\hspace{.01cm}
+%%\subfigure[Incomes of SP 1]{\label{fig:Incomes1}{\includegraphics[width=0.48\columnwidth]{Figures/Incomes1}}}
+%%\hspace{.01cm}
+%%\subfigure[Incomes of SP 2]{\label{fig:Incomes2}{\includegraphics[width=0.48\columnwidth]{Figures/Incomes2}}}
+%%\hspace{.01cm}
+%%\subfigure[Incomes of SP 3]{\label{fig:Incomes3}{\includegraphics[width=0.48\columnwidth]{Figures/Incomes3}}}
+%%\caption{Comparison of the incomes of the MVNO}\label{fig:Incomesall}
+%%\end{figure}
+%%%
+%%\begin{figure}[t]
+%%  \centering
+%%  \subfigure[All SPs]{\label{fig:Users}{\includegraphics[width=0.48\columnwidth]{Figures/Users}}}
+%%\hspace{.01cm}
+%%\subfigure[SP 1]{\label{fig:Users1}{\includegraphics[width=0.48\columnwidth]{Figures/Users1}}}
+%%\hspace{.01cm}
+%%\subfigure[SP 2]{\label{fig:Users2}{\includegraphics[width=0.48\columnwidth]{Figures/Users2}}}
+%%\hspace{.01cm}
+%%\subfigure[SP 3]{\label{fig:Users3}{\includegraphics[width=0.48\columnwidth]{Figures/Users3}}}
+%%\caption{Comparison of the maximum number of satisfied users.}\label{fig:Usersall}
+%%\end{figure}
+%%%
+%%\begin{figure}[t]
+%%  \centering
+%% \includegraphics[width=8cm]{Figures/DataRate}
+%%  \caption{The effect of the required data rate. The number of users = 30.}\label{fig:DataRate}
+%%\end{figure}
+%%%
+%%\begin{figure}[t]
+%%  \centering
+%%  \subfigure[All backhauls cost]{\label{fig:Backhaul}{\includegraphics[width=0.65\columnwidth]{Figures/Backhaul}}}
+%%\hspace{.01cm}
+%%\subfigure[Backhaul 1 cost]{\label{fig:Backhaul1}{\includegraphics[width=0.65\columnwidth]{Figures/Backhaul1}}}
+%%\hspace{.01cm}
+%%\subfigure[Backhaul 2 cost]{\label{fig:Backhaul2}{\includegraphics[width=0.65\columnwidth]{Figures/Backhaul2}}}
+%%\caption{Comparison of the backhaul access costs from InPs.}\label{fig:Backhaulall}
+%%\end{figure}
+%%%
+%%\begin{figure}[t]
+%%  \centering
+%% \includegraphics[width=8cm]{Figures/Delay}
+%%  \caption{Comparison of the average Delay. The number of users = 30.}\label{fig:Delay}
+%%\end{figure}
+%%%
+%\begin{figure}[t]
+%  \centering
+% \includegraphics[width=9cm]{Figures/Utility}
+%  \caption{Comparison of the MVNO utility.}\label{fig:Utility}
+%\end{figure}
+%%
+%\section{Conclusions and Future Work}
+%In this paper, we jointly studied wireless network virtualization and information-centric networking in next generation cellular networks. We proposed an information-centric wireless network virtualization framework for enabling both wireless network virtualization and ICN. Then, we formulated the virtual resource allocation and in-network caching strategy as an optimization problem, which maximizes the utility of mobile virtual network operators. In addition, we developed an efficient ADMM-based distributed virtual resource allocation and in-network caching scheme. Simulation results were presented to show that the performance of backhaul alleviation can be substantially improved in the proposed  scheme with in-network caching. The InPs, SPs and MVNOs can benefit from the proposed information-centric wireless network virtualization framework. Future work is in progress to consider admission control in the proposed framework.
+%%\appendices
+%
+%
+%% use section* for acknowledgement
+%%\section*{Acknowledgment}
+%%
+%%%{\Large\textbf{Acknowledgment}}
+%%
+%%We thank the reviewers for their detailed reviews and constructive comments, which have helped to improve the quality of this paper.
+%%
+%%%The authors would like to thank...
+%
+%
+%% Can use something like this to put references on a page
+%% by themselves when using endfloat and the captionsoff option.
+%%\ifCLASSOPTIONcaptionsoff
+%%  \newpage
+%%\fi
+%
+%
+%
+%% trigger a \newpage just before the given reference
+%% number - used to balance the columns on the last page
+%% adjust value as needed - may need to be readjusted if
+%% the document is modified later
+%%\IEEEtriggeratref{8}
+%% The "triggered" command can be changed if desired:
+%%\IEEEtriggercmd{\enlargethispage{-5in}}
+%
+%% references section
+%
+%% can use a bibliography generated by BibTeX as a .bbl file
+%% BibTeX documentation can be easily obtained at:
+%% http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
+%% The IEEEtran BibTeX style support page is at:
+%% http://www.michaelshell.org/tex/ieeetran/bibtex/
+%%\newpage
+%
+%\balance
+%\bibliographystyle{IEEEtran}
+%% argument is your BibTeX string definitions and bibliography database(s)
+%\bibliography{Liang_References}
+%%
+%% <OR> manually copy in the resultant .bbl file
+%% set second argument of \begin to the number of references
+%% (used to reserve space for the reference number labels box)
+%%\begin{thebibliography}{1}
+%%
+%%\bibitem{IEEEhowto:kopka}
+%%H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
+%%  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+%%
+%%\end{thebibliography}
+%
+%% biography section
+%%
+%% If you have an EPS/PDF photo (graphicx package needed) extra braces are
+%% needed around the contents of the optional argument to biography to prevent
+%% the LaTeX parser from getting confused when it sees the complicated
+%% \includegraphics command within an optional argument. (You could create
+%% your own custom macro containing the \includegraphics command to make things
+%% simpler here.)
+%%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
+%% or if you just want to reserve a space for a photo:
+%
+%%\begin{IEEEbiography}{Michael Shell}
+%%Biography text here.
+%%\end{IEEEbiography}
+%
+%% if you will not have a photo at all:
+%%\begin{IEEEbiographynophoto}{John Doe}
+%%Biography text here.
+%%\end{IEEEbiographynophoto}
+%
+%% insert where needed to balance the two columns on the last page with
+%% biographies
+%%\newpage
+%
+%%\begin{IEEEbiographynophoto}{Jane Doe}
+%%Biography text here.
+%%\end{IEEEbiographynophoto}
+%
+%% You can push biographies down or up by placing
+%% a \vfill before or after them. The appropriate
+%% use of \vfill depends on what kind of text is
+%% on the last page and whether or not the columns
+%% are being equalized.
+%
+%%\vfill
+%
+%% Can be used to pull up biographies so that the bottom of the last one
+%% is flush with the other column.
+%%\enlargethispage{-5in}
+%
+%
+%
+%% that's all folks
+
+
+\end{document}
+
+

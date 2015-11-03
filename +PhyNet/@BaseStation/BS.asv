@@ -1,0 +1,46 @@
+classdef BS
+%
+    properties (Access=private) % Private parameters
+    id
+    position
+    TxP
+    bandwidth
+    backhaulCapacity
+    activeUeList
+    end
+ %
+    properties % Public parameters
+    userList
+    contentList
+    end
+    methods
+       function  this = set.id(this,value)
+                this.ID = value;
+       end
+       function id = get.ID(this)
+                id = this.ID;
+       end
+       function  this = set.Position(this,value)
+                this.Position = value;
+       end
+       function  position = get.Position(this)
+                position = this.Position;
+       end       
+       function  this = set.Bandwidth(this,value)
+                this.Bandwidth = value;
+       end
+       function  position = get.Bandwidth(this)
+                position = this.Bandwidth;
+       end
+       function  this = set.BackhaulCapacity(this,value)
+                this.BackhaulCapacity = value;
+       end
+       function  backhaulCapacity = get.BackhaulCapacity(this)
+                backhaulCapacity = this.BackhaulCapacity;
+       end
+       function  activeUeList = get.ActiveUeList(this)
+                activeUeList = this.ActiveUeList;
+       end      
+   end
+   ...
+end
