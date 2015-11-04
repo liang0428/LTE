@@ -1,7 +1,7 @@
 classdef BaseStation
-    properties (SetAccess='private') % Private parameters
+    properties (SetAccess='protected') % Private parameters
     id
-    position
+    position=[];
     TxP
     bandwidth
     backhaulCapacity
@@ -18,8 +18,9 @@ classdef BaseStation
     end
     methods
        function  this = BaseStation(value1)
+           if nargin > 0
                 this.id = value1;
-%                this.position = value2;
+           end
        end
        function  this = Set(this,variable,value)
             switch variable
