@@ -2,6 +2,7 @@ clear all;
 clc;
 userDensity=30;% 30 users per macrocell
 smallDensity=20;% 20 SBS per macrocell
+totalUser
 smallFineness=30;
 UserFineness=100;
 [smallMeshNum, smallMeshPosition] =  CellMesh(smallFineness);
@@ -13,21 +14,25 @@ for i=1:19
         t=(i-1)*smallDensity+j;
         y(t)=PhyNet.Small(t,i);
         y(t)=SmallcellLocation(y(t),x(y(t).attatchedMacroId),smallMeshNum,smallMeshPosition);
+        x(i)=x(i).UpdateSmall(t);
     end
     
     for j=1:userDensity
-        z(i,j)=PhyNet.User(j,i);
-        z(i,j)=UserLocation(z(i,j),x(z(i,j).attatchedMacroId),UserMeshNum,UserMeshPosition);
-%         t=(i-1)*userDensity+j;
-%         z(t)=PhyNet.User(t,i);
-%         z(t)=UserLocation(z(t),x(z(t).attatchedMacroId),UserMeshNum,UserMeshPosition);
+        t=(i-1)*userDensity+j;
+        z(t)=PhyNet.User(t,i);
+        z(t)=UserLocation(z(t),x(z(t).attatchedMacroId),UserMeshNum,UserMeshPosition);
+        x(i)=x(i).UpdateCoveredUser(t);
     end
 end
 
 
 %Set Channel
- for i=1:userDensity
- for j=1:19
-        cM(i;j)=Radio.Channel(z(i),x);
- end 
-% end
+ for t=1:userDensity*19
+     for j=1:19
+            cM(i,j)=Radio.Channel(z(i,j),x(j));
+     end 
+ end
+%  
+% for i=1:userDensity
+%     for j=1:smallDensity*19
+%         cS(i,j)=Radio.Channel(z(i,j),x(j));

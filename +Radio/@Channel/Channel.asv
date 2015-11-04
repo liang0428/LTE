@@ -9,7 +9,7 @@ classdef Channel
     end
     
     methods
-        function this=Channel(arg1,arg2) %constructor
+        function this=Channel(arg1,arg2,arg3)
             val1=0;
             val2=0;
            if nargin > 0
@@ -18,7 +18,10 @@ classdef Channel
            end
            this.rxPoint=val1;
            this.txPoint=val2;
-        end    
+           this.pathLoss=PathLoss(this.rxPoint,this.txPoint,arg3);
+        end
+        
+        function this=Pathloss
     end
     
 end
