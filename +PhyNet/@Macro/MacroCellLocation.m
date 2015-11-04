@@ -1,5 +1,5 @@
-function [out] =  MacroCellLocation(i) 
- 
+function [out] =  MacroCellLocation(obj)
+ i=obj.id;
 baseinfo(1, 1) = 0.0; 
 baseinfo(1, 2) = 0.0; 
 baseinfo(2, 1) = -0.5*sqrt(3.0); 
@@ -39,4 +39,6 @@ baseinfo(18, 2) = 1.5;
 baseinfo(19, 1) = sqrt(3.0); 
 baseinfo(19, 2) = 3.0; 
  
-out = baseinfo(i); 
+out = baseinfo(i,:);
+
+end
