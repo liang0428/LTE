@@ -6,6 +6,8 @@ classdef BaseStation
     bandwidth
     backhaulCapacity
     userList
+    userCsiList
+    spectrumStrategy
     end
  %
     properties % Public parameters
@@ -34,6 +36,10 @@ classdef BaseStation
                     this.backhaulCapacity = value;
                 case 'userList'
                     this.userList = value;
+                case 'spectrumStrategy'
+                    this.spectrumStrategy = value;
+                case 'userCsiList'
+                    this.userCsiList = value;
                 otherwise
                     fprint
             end

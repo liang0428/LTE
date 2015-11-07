@@ -1,4 +1,4 @@
-function this=GeneratePathLoss(this)
+function this=GenerateChannelGain(this)
 
 %PathLoss is used to calculate the pathloss of a channel object 'this'
 %arg is used to select the pathloss model
@@ -16,6 +16,17 @@ switch this.type
 end
 
 this.pathLoss=PL;
+%%%shadowing Generation
+switch this.type
+    case 'Macro'
+        SD=normrnd(0,8);
+    case 'Small'
+        SD=normrnd(0,4);
+    otherwise
+end
 
-    
+this.shadowing=SD;
+
+
+this.channelGain=PL+SD;
 end

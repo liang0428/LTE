@@ -30,12 +30,13 @@ end
 %Set Channel
  for i=1:totalUser
      for j=1:19
-         cM(i,j)=Radio.Channel(z(i),x(j));
+         cM(i,j)=Radio.Channel(z(i),x(j),'Macro');
+         cM(i,j)=cM(i,j).GenerateShadowing;
      end 
  end
-%  
+% %  
 for i=1:totalUser
     for j=1:totalSmall
-        cS(i,j)=Radio.Channel(z(i),y(j));
+        cS(i,j)=Radio.Channel(z(i),y(j),'Small');
     end
 end

@@ -1,10 +1,12 @@
 classdef Channel
     properties(SetAccess='protected')
+        type
         rxPoint
         txPoint
         pathLoss
         shadowing
-        type
+        channelGain
+        rxPower
     end
     
     methods

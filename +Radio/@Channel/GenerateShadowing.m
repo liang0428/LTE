@@ -1,11 +1,11 @@
-function this=GenerateShadowing(this,arg1)
+function this=GenerateShadowing(this)
 
 %PathLoss is used to calculate the pathloss of a channel object 'this'
 %arg is used to select the pathloss model
 %Results return to this.pathLoass units in dB
 
 
-switch arg1
+switch this.type
     case 'Macro'
         SD=normrnd(0,8);
     case 'Small'
@@ -13,7 +13,7 @@ switch arg1
     otherwise
 end
 
-this.pathLoss=SD;
+this.shadowing=SD;
 
     
 end
