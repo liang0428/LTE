@@ -3,6 +3,12 @@ classdef User
         id
         attatchedMacroId
         position
+        channelList
+        spectrumEfficiencyList
+        spectrumEfficient
+        selectedChannel
+        servingBSType
+        servingBS
     end
  %
     properties % Public parameters
@@ -21,22 +27,23 @@ classdef User
            end
 %                this.channel=Radio.Channel(this.id);
        end
-%        function  this = Set(this,variable,value)
-%             switch variable
-%                 case 'position'
-%                     this.position = value;
-%                 case 'TxP'
-%                     this.TxP = value;
-%                 case 'bandwidth'
-%                     this.bandwidth= value;
-%                 case 'backhaulCapacity'
-%                     this.backhaulCapacity = value;
-%                 case 'userList'
-%                     this.userList = value;
-%                 otherwise
-%                     fprint
-%             end
-%        end
+       function  this = Set(this,variable,value)
+            switch variable
+                case 'position'
+                    this.position = value;
+                case 'TxP'
+                    this.TxP = value;
+                case 'bandwidth'
+                    this.bandwidth= value;
+                case 'backhaulCapacity'
+                    this.backhaulCapacity = value;
+                case 'userList'
+                    this.userList = value;
+                case 'channelList'
+                    this.channelList = value;  
+                otherwise
+            end
+       end
 %        
 %        function  value = Get(this,variable)
 %             switch variable

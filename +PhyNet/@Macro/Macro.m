@@ -5,6 +5,7 @@ classdef Macro <PhyNet.BaseStation
         radius %Radius
         attatchedPicoList
         attatchedSmallList
+        coveredUserList
     end
 %    
     %Methods
@@ -14,6 +15,14 @@ classdef Macro <PhyNet.BaseStation
                 this.radius = val2;
                 this.position=this.radius.*MacroCellLocation(this);
                 this.TxP=49; %49dBm tramsmission power 
+       end
+       
+       function this = UpdateSmall(this,val)
+           this.attatchedSmallList=[this.attatchedSmallList,val];
+       end
+       
+       function this = UpdateCoveredUser(this,val)
+           this.coveredUserList=[this.coveredUserList,val];
        end
     end
 
